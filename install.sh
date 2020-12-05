@@ -33,7 +33,7 @@ sudo apt autoremove && sudo apt autoclean && sudo apt clean
 
 # https://www.esli-nux.com/2017/04/ssd-no-linux.html
 # https://www.esli-nux.com/2014/08/usar-arquivo-como-memoria-swap.html
-# Config files on gists in https://gist.github.com/Esl1h (ssh_config and sysctl.conf)
+# Config files on gists in https://gist.github.com/Esl1h
 
 echo "\n\n\n\n"
 echo ################################
