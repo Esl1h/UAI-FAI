@@ -1,0 +1,67 @@
+#
+
+Host *
+#   ForwardAgent no
+#   ForwardX11 no
+#   ForwardX11Trusted yes
+#   PasswordAuthentication yes
+#   HostbasedAuthentication no
+#   GSSAPIAuthentication no
+#   GSSAPIDelegateCredentials no
+#   GSSAPIKeyExchange no
+#   GSSAPITrustDNS no
+#   BatchMode no
+#   CheckHostIP yes
+#   AddressFamily any
+#   ConnectTimeout 0
+#   StrictHostKeyChecking ask
+#   IdentityFile ~/.ssh/id_rsa
+#   IdentityFile ~/.ssh/id_dsa
+#   IdentityFile ~/.ssh/id_ecdsa
+#   IdentityFile ~/.ssh/id_ed25519
+#   Port 22
+#   Protocol 2
+#   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc
+#   MACs hmac-md5,hmac-sha1,umac-64@openssh.com
+#   EscapeChar ~
+#   Tunnel no
+#   TunnelDevice any:any
+#   PermitLocalCommand no
+#   VisualHostKey no
+#   ProxyCommand ssh -q -W %h:%p gateway.example.com
+#   RekeyLimit 1G 1h
+    ServerAliveInterval 60
+    ServerAliveCountMax 10
+    SendEnv LANG LC_*
+    HashKnownHosts yes
+    GSSAPIAuthentication yes
+    ControlMaster auto
+    ControlPath ~/.ssh/ALL-%r@%h:%p
+    ControlPersist 8h
+
+
+# Fortress/Bastion/Jumpbox host -  Development Enviromnent
+Host 172.22.1.100
+    IdentityFile /path/to/my/secret.pem
+    ControlMaster auto
+    ControlPath ~/.ssh/-%r@%h:%p
+    ControlPersist 8h
+
+# SSH configuration: always when connecting to hosts in this domain, SSH will use the Tunel
+Host *.dev.intranet
+    ProxyCommand ssh -W %h:%p user@172.22.1.100 -i /path/to/my/secret.pem  -o StrictHostKeyChecking=no 
+    IdentityFile /path/to/my/secret.pem
+
+#=====================================
+
+# Fortress/Bastion/Jumpbox host -  Production Enviromnent 
+Host 10.0.1.100
+    IdentityFile /path/to/my/secret.pem
+    ControlMaster auto
+    ControlPath ~/.ssh/FortressPROD-%r@%h:%p
+    ControlPersist 8h
+
+# configuração do SSH: sempre ao conectar nos hosts deste dominio, o SSH irá usar o Tunel
+Host *.prod.intranet
+    ProxyCommand ssh -W %h:%p user@10.0.1.100 -i /path/to/my/secret.pem  -o StrictHostKeyChecking=no 
+    IdentityFile /path/to/my/secret.pem 

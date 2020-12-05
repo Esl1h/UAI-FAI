@@ -1,7 +1,9 @@
 #!/bin/bash
 sudo apt update
 sudo apt upgrade -y
-sudo apt install curl tilix synaptic yakuake openssh-server chromium-browser spyder3 git vim htop most zsh python3-pip fonts-powerline git-extras unrar zip unzip p7zip-full p7zip-rar rar openjdk-11-jdk steam
+sudo apt install curl tilix synaptic yakuake openssh-server \
+chromium-browser spyder3 git vim htop most zsh python3-pip fonts-powerline \
+git-extras unrar zip unzip p7zip-full p7zip-rar rar openjdk-11-jdk steam
 
 sudo pip3 install tldr setuptools
 
@@ -21,17 +23,17 @@ tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
 /swapfile    none    swap  sw     0    0
 EOT'
 
-sudo su - root -c 'curl https://gist.githubusercontent.com/Esl1h/65c0d67780ee6212ebce00efe76d6007/raw/6fbfc331b9a6be1522d3df7f6ea190659893915b/sysctl.conf >>/etc/sysctl.conf'
+sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
 
 sudo sysctl -p
 
-sudo su - root -c 'curl https://gist.githubusercontent.com/Esl1h/29beb6d8af2b16d5438b66180705ad95/raw/7db839086cc92e1f9d073c13adb67026fc75989a/ssh_config >/etc/ssh/ssh_config'
+sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
 
 sudo apt autoremove && sudo apt autoclean && sudo apt clean
 
 # https://www.esli-nux.com/2017/04/ssd-no-linux.html
 # https://www.esli-nux.com/2014/08/usar-arquivo-como-memoria-swap.html
-# Config files on gists in https://gist.github.com/Esl1h (ssh_config and sysctl.conf)
+# Config files on gists in https://gist.github.com/Esl1h
 
 echo "\n\n\n\n"
 echo ################################
@@ -57,7 +59,7 @@ git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/theme
 
 # install and config zshrc file:
 rm ~/.zshrc
-wget -c https://raw.githubusercontent.com/Esl1h/my-terminal/master/zshrc -O ~/.zshrc
+wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
 echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
 echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
 echo 'export MANPAGER="/usr/bin/most -s" ' >>~/.zshrc
