@@ -3,7 +3,7 @@ sudo apt update
 sudo apt upgrade -y
 sudo apt install curl tilix synaptic yakuake openssh-server \
 chromium-browser spyder3 git vim htop most zsh python3-pip fonts-powerline \
-git-extras unrar zip unzip p7zip-full p7zip-rar rar openjdk-11-jdk steam
+git-extras unrar zip unzip p7zip-full p7zip-rar rar openjdk-11-jdk steam fzf
 
 sudo pip3 install tldr setuptools
 
@@ -48,6 +48,8 @@ wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v1.2.0/Hack.zi
 cd ~/.fonts/ && unzip Hack.zip
 
 # install some plugins to zsh - syntax high lighting and command auto suggestions
+mkdir ~/.oh-my-zsh/completions
+
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
 git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
@@ -62,4 +64,3 @@ rm ~/.zshrc
 wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
 echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
 echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
-echo 'export MANPAGER="/usr/bin/most -s" ' >>~/.zshrc
