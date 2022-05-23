@@ -7,7 +7,6 @@ git-extras unrar zip unzip p7zip-full p7zip-rar rar openjdk-11-jdk steam fzf
 
 sudo pip3 install tldr setuptools
 
-sudo snap install spotify
 sudo snap install code --classic
 
 sudo systemctl enable ssh
