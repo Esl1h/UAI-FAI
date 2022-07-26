@@ -1,7 +1,7 @@
-ZSH_THEME="powerlevel9k/powerlevel9k"
-POWERLEVEL9K_MODE="nerdfont-complete"
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(ram status root_indicator background_jobs history time)
+ZSH_THEME="powerlevel10k/powerlevel10k"
+#POWERLEVEL9K_MODE="nerdfont-complete"
+#POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs)
+#POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(ram status root_indicator background_jobs history time)
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -43,6 +43,8 @@ plugins=(
     zsh-autosuggestions
     bgnotify
 )
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Setup alias and exports:
 export MANPAGER="/usr/bin/most -s"

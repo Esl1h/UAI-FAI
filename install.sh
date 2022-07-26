@@ -2,18 +2,18 @@
 sudo apt update
 sudo apt upgrade -y
 sudo apt install curl tilix synaptic yakuake openssh-server \
-chromium-browser spyder3 git vim htop most zsh python3-pip fonts-powerline \
-git-extras unrar zip unzip p7zip-full p7zip-rar rar openjdk-11-jdk steam fzf
+spyder3 git vim htop most zsh python3-pip fonts-powerline \
+git-extras unrar zip unzip p7zip-full p7zip-rar rar openjdk-18-jdk steam fzf
 
-sudo pip3 install tldr setuptools
+pip3 install tldr setuptools
 
 sudo snap install code --classic
 
 sudo systemctl enable ssh
 sudo systemctl start ssh
 
-sudo dd if=/dev/zero of=/swapfile bs=100M count=20
-sudo mkswap /swapfile && chmod 600 /swapfile && swapon /swapfile
+sudo dd if=/dev/zero of=/swapfile bs=100M count=40
+sudo mkswap /swapfile && sudo chmod 600 /swapfile && sudo swapon /swapfile
 
 sudo su - root -c 'cat <<EOT >>/etc/fstab
 tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
@@ -30,8 +30,8 @@ sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ss
 
 sudo apt autoremove && sudo apt autoclean && sudo apt clean
 
-# https://www.esli-nux.com/2017/04/ssd-no-linux.html
-# https://www.esli-nux.com/2014/08/usar-arquivo-como-memoria-swap.html
+# https://esli.blog.br/guia-ssd-no-linux
+# https://esli.blog.br/ram-e-swap
 # Config files on gists in https://gist.github.com/Esl1h
 
 echo "\n\n\n\n"
@@ -43,7 +43,7 @@ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/to
 
 # install fonts do ZSH and powerlevel theme
 mkdir ~/.fonts
-wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v1.2.0/Hack.zip -P ~/.fonts/
+wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip -P ~/.fonts/
 cd ~/.fonts/ && unzip Hack.zip
 
 # install some plugins to zsh - syntax high lighting and command auto suggestions
@@ -56,7 +56,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/p
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
 
 # powerlevel9k zsh theme
-git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
 
 # install and config zshrc file:
 rm ~/.zshrc
