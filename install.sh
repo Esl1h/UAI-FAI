@@ -63,3 +63,5 @@ rm ~/.zshrc
 wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
 echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
 echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
+
+wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/p10k.zsh -O ~/.p10k.zsh
