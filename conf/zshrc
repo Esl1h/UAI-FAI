@@ -56,6 +56,18 @@ plugins=(
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
+
+# Install Golang
+export PATH=$PATH:/usr/local/go/bin
+
+# Snap apps path
+export PATH="$PATH:/snap/bin"
+
+# Rancher Desktop Path (local K8S)
+export PATH="$PATH:$HOME/.rd/bin"
 
 # Setup alias and exports:
 export MANPAGER="/usr/bin/most -s"
@@ -71,21 +83,7 @@ export QT_IM_MODULE=ibus
 
 source <(kubectl completion zsh)
 alias k=kubectl
-
-complete -F __start_kubectl k
-
-# Install Ruby Gems to ~/gems
-export GEM_HOME="$HOME/gems"
-export PATH="$HOME/gems/bin:$PATH"
-
-# Install Golang
-export PATH=$PATH:/usr/local/go/bin
-
-# Snap apps path
-export PATH="$PATH:/snap/bin"
-
-export ZSH="/home/esli/.oh-my-zsh"
-source $ZSH/oh-my-zsh.sh
+#complete -F __start_kubectl k
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

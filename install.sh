@@ -34,7 +34,7 @@ sudo apt autoremove && sudo apt autoclean && sudo apt clean
 # https://esli.blog.br/ram-e-swap
 # Config files on gists in https://gist.github.com/Esl1h
 
-echo "\n\n\n\n"
+printf "\n\n\n\n"
 echo ################################
 read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
 
