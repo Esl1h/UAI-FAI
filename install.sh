@@ -1,67 +1,146 @@
 #!/bin/bash
-sudo apt update
-sudo apt upgrade -y
-sudo apt install curl tilix synaptic yakuake openssh-server \
-spyder3 git vim htop most zsh python3-pip fonts-powerline \
-git-extras unrar zip unzip p7zip-full p7zip-rar rar openjdk-18-jdk steam fzf
-
-pip3 install tldr setuptools
-
-sudo snap install code --classic
-
-sudo systemctl enable ssh
-sudo systemctl start ssh
-
-sudo dd if=/dev/zero of=/swapfile bs=100M count=40
-sudo mkswap /swapfile && sudo chmod 600 /swapfile && sudo swapon /swapfile
-
-sudo su - root -c 'cat <<EOT >>/etc/fstab
-tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
-tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
-tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
-/swapfile    none    swap  sw     0    0
-EOT'
-
-sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
-
-sudo sysctl -p
-
-sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
-
-sudo apt autoremove && sudo apt autoclean && sudo apt clean
-
 # https://esli.blog.br/guia-ssd-no-linux
 # https://esli.blog.br/ram-e-swap
 # Config files on gists in https://gist.github.com/Esl1h
 
-printf "\n\n\n\n"
-echo ################################
-read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
+function updated {
+    sudo apt update
+    sudo apt upgrade -y
+    sudo snap refresh
+    sudo apt autoremove -y
+    sudo apt autoclean -y
+    sudo apt clean -y
+}
 
-# Install oh-my-zsh
-sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+function install_basics {
+  sudo apt install  curl tilix yakuake openssh-server xterm zenity \
+                    git vim htop most zsh python3-pip fonts-powerline libutempter0 \
+                    git-extras openjdk-18-jdk fzf flatpak apt-transport-https gnome-software-plugin-flatpak -y
+  sudo snap install code --classic
+  pip3 install tldr setuptools
 
-# install fonts do ZSH and powerlevel theme
-mkdir ~/.fonts
-wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip -P ~/.fonts/
-cd ~/.fonts/ && unzip Hack.zip
+}
 
-# install some plugins to zsh - syntax high lighting and command auto suggestions
-mkdir ~/.oh-my-zsh/completions
+function swapfile_set {
+    sudo dd if=/dev/zero of=/swapfile bs=100M count=40 && sudo mkswap /swapfile
+    sudo chmod 600 /swapfile
+    sudo swapon /swapfile
+}
 
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+function dont_need_this {
+    sudo su - root -c 'cat <<EOT >>/etc/fstab
+    tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
+    tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
+    tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
+    /swapfile    none    swap  sw     0    0
+    EOT'
+}
 
-git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+function sysctl_set {
+    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
+    sudo sysctl -p
+}
 
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
+function ssh_set {
+  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
+  sudo systemctl enable ssh
+  sudo systemctl start ssh
+}
 
-# powerlevel9k zsh theme
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
+function install_fonts {
+  # install fonts to ZSH, Jetbrains and powerlevel theme
+  mkdir ~/.fonts
+  wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/
+  unzip Hack.zip
+  wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts
+  unzip JetBrainsMono-2.242.zip
+  fc-cache -f -v
+}
 
-# install and config zshrc file:
-rm ~/.zshrc
-wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
-echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
-echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
+function repos_set {
+  # Brave Browser
+  sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+  echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+  # Softmaker Office
+  wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add - && \
+  sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
+  # Flathub
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  # NextDNS
+  sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg
+  echo "deb [signed-by=/usr/share/keyrings/nextdns.gpg] https://repo.nextdns.io/deb stable main" | sudo tee /etc/apt/sources.list.d/nextdns.list
 
-wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/p10k.zsh -O ~/.p10k.zsh
+}
+
+function first_run {
+  updated
+  install_basics
+  swapfile_set
+  dont_need_this
+  sysctl_set
+  ssh_set
+  install_fonts
+  repos_set
+}
+
+function second_install {
+  sudo apt install brave-browser -y
+  sudo apt install nextdns
+  sudo apt install softmaker-office-2021 -y
+}
+
+function joplin_install {
+  cd
+  wget -c https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh -O joplin.sh
+  chmod +x joplin.sh
+  ./joplin.sh --silent && rm joplin.sh
+}
+
+function steam_install {
+  cd
+  wget https://cdn.cloudflare.steamstatic.com/client/installer/steam.deb -O steam.deb
+  sudo dpkg -i steam.deb && rm steam.deb
+}
+
+function nextdns_set {
+  sudo nextdns install -config <your config id> -report-client-info -auto-activate
+}
+
+first_run
+updated
+joplin_install
+steam_install
+#nextdns_set CHANGE CONFIG ID!
+second_install
+
+function install_zsh_ohmyzsh {
+      printf "\n\n\n\n"
+      echo ################################
+      read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
+
+      # Install oh-my-zsh
+      sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+
+      # install some plugins to zsh - syntax high lighting and command auto suggestions
+      mkdir -p ~/.oh-my-zsh/completions
+      git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+      git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+      git clone --depth 1 https://github.com/junegunn/fzf.git             ~/.fzf
+      ~/.fzf/install
+
+      # powerlevel10k zsh theme
+      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
+}
+
+function config_zsh_ohmyzsh {
+    # config zshrc file:
+    rm ~/.zshrc
+    wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
+    echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
+    echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
+
+    wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/p10k.zsh -O ~/.p10k.zsh
+}
+
+install_zsh_ohmyzsh
+config_zsh_ohmyzsh
