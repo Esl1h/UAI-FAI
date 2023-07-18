@@ -30,11 +30,10 @@ function swapfile_set {
 
 function dont_need_this {
     sudo su - root -c 'cat <<EOT >>/etc/fstab
-    tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
-    tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
-    tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
-    /swapfile    none    swap  sw     0    0
-    EOT'
+tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
+tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
+tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
+/swapfile    none    swap  sw     0    0'
 }
 
 function sysctl_set {
