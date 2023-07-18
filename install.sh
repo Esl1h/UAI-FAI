@@ -18,7 +18,8 @@ function install_basics {
                     git-extras openjdk-18-jdk fzf flatpak apt-transport-https gnome-software-plugin-flatpak -y
   sudo snap install lsd
   pip3 install tldr setuptools
-
+  sudo apt install dconf-cli
+  sudo dconf update
 }
 
 function swapfile_set {
@@ -85,17 +86,24 @@ function second_install {
   sudo apt install softmaker-office-nx -y
 }
 
-function joplin_install {
-  cd
-  wget -c https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh -O joplin.sh
-  chmod +x joplin.sh
-  ./joplin.sh --silent && rm joplin.sh
-}
+function flatpak_packages {
+  flatpak update
+  flatpak install flathub \
+    com.visualstudio.code \
+    com.protonvpn.www \
+    com.bitwarden.desktop \
+    com.jetbrains.IntelliJ-IDEA-Community \
+    com.jetbrains.PyCharm-Community \
+    net.cozic.joplin_desktop \
+    me.timschneeberger.GalaxyBudsClient \
+    com.brave.Browser \
+    com.valvesoftware.Steam \
+    com.spotify.Client \
+    org.telegram.desktop \
+    org.signal.Signal \
+    network.loki.Session \
+    com.github.tchx84.Flatseal --noninteractive
 
-function steam_install {
-  cd
-  wget https://cdn.cloudflare.steamstatic.com/client/installer/steam.deb -O steam.deb
-  sudo dpkg -i steam.deb && rm steam.deb
 }
 
 function nextdns_set {
@@ -104,10 +112,9 @@ function nextdns_set {
 
 first_run
 updated
-joplin_install
-steam_install
 #nextdns_set CHANGE CONFIG ID!
 second_install
+flatpak_packages
 
 function install_zsh_ohmyzsh {
       printf "\n\n\n\n"
