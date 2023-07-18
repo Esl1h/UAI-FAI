@@ -82,7 +82,7 @@ function first_run {
 
 function second_install {
   sudo apt install nextdns
-  sudo apt install softmaker-office-2021 -y
+  sudo apt install softmaker-office-nx -y
 }
 
 function joplin_install {
