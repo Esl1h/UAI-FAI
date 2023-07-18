@@ -81,7 +81,6 @@ function first_run {
 }
 
 function second_install {
-  sudo apt install brave-browser -y
   sudo apt install nextdns
   sudo apt install softmaker-office-2021 -y
 }
