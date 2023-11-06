@@ -3,6 +3,8 @@
 # https://esli.blog.br/ram-e-swap
 # Config files on gists in https://gist.github.com/Esl1h
 
+nextdnsid=YourID
+
 function updated {
     sudo apt update
     sudo apt upgrade -y
@@ -50,9 +52,9 @@ function ssh_set {
 function install_fonts {
   # install fonts to ZSH, Jetbrains and powerlevel theme
   mkdir ~/.fonts
-  wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/
+  wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/ || exit
   unzip Hack.zip
-  wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts
+  wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts || exit
   unzip JetBrainsMono-2.242.zip
   fc-cache -f -v
 }
@@ -109,7 +111,7 @@ function flatpak_packages {
 }
 
 function nextdns_set {
-  sudo nextdns install -config <your config id> -report-client-info -auto-activate
+  sudo nextdns install -config $nextdnsid -report-client-info -auto-activate
 }
 
 first_run
