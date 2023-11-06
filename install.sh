@@ -90,17 +90,20 @@ function flatpak_packages {
   flatpak install flathub \
     com.visualstudio.code \
     com.protonvpn.www \
-    com.bitwarden.desktop \
     com.jetbrains.IntelliJ-IDEA-Community \
     com.jetbrains.PyCharm-Community \
     net.cozic.joplin_desktop \
     me.timschneeberger.GalaxyBudsClient \
     com.brave.Browser \
+    org.mozilla.firefox \
+    net.codeindustry.MasterPDFEditor \
+    io.github.peazip.PeaZip \
+    network.loki.Session \
     com.valvesoftware.Steam \
     com.spotify.Client \
     org.telegram.desktop \
-    org.signal.Signal \
-    network.loki.Session \
+    dev.bsnes.bsnes \
+    io.github.flattool.Warehouse \
     com.github.tchx84.Flatseal --noninteractive
 
 }
