@@ -3,6 +3,8 @@
 # https://esli.blog.br/ram-e-swap
 # Config files on gists in https://gist.github.com/Esl1h
 
+nextdnsid=YourID
+
 function updated {
     sudo apt update
     sudo apt upgrade -y
@@ -13,9 +15,9 @@ function updated {
 }
 
 function install_basics {
-  sudo apt install  curl tilix yakuake openssh-server xterm zenity solaar \
+  sudo apt install  curl tilix flatpak yakuake openssh-server xterm zenity solaar \
                     git vim htop most zsh python3-pip fonts-powerline libutempter0 bat \
-                    git-extras openjdk-18-jdk fzf flatpak apt-transport-https gnome-software-plugin-flatpak -y
+                    git-extras openjdk-18-jdk fzf apt-transport-https gnome-software-plugin-flatpak -y
   sudo snap install lsd
   pip3 install tldr setuptools
   sudo apt install dconf-cli
@@ -50,9 +52,9 @@ function ssh_set {
 function install_fonts {
   # install fonts to ZSH, Jetbrains and powerlevel theme
   mkdir ~/.fonts
-  wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/
+  wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/ || exit
   unzip Hack.zip
-  wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts
+  wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts || exit
   unzip JetBrainsMono-2.242.zip
   fc-cache -f -v
 }
@@ -109,7 +111,7 @@ function flatpak_packages {
 }
 
 function nextdns_set {
-  sudo nextdns install -config <your config id> -report-client-info -auto-activate
+  sudo nextdns install -config $nextdnsid -report-client-info -auto-activate
 }
 
 first_run
@@ -124,7 +126,7 @@ function install_zsh_ohmyzsh {
       read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
 
       # Install oh-my-zsh
-      sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+      sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 
       # install some plugins to zsh - syntax high lighting and command auto suggestions
       mkdir -p ~/.oh-my-zsh/completions
@@ -144,7 +146,7 @@ function config_zsh_ohmyzsh {
     echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
     echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
 
-    wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/p10k.zsh -O ~/.p10k.zsh
+    #wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/p10k.zsh -O ~/.p10k.zsh
 }
 
 install_zsh_ohmyzsh
