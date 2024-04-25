@@ -100,7 +100,6 @@ function flatpak_packages {
     org.mozilla.firefox \
     net.codeindustry.MasterPDFEditor \
     io.github.peazip.PeaZip \
-    network.loki.Session \
     com.valvesoftware.Steam \
     com.spotify.Client \
     org.telegram.desktop \
