@@ -3,52 +3,49 @@
 # https://esli.blog.br/ram-e-swap
 # Config files on gists in https://gist.github.com/Esl1h
 
-source /etc/os-release
+. /etc/os-release
+
+if [ "${ID}" = "fedora" ]; then
+ package_manager="dnf"
+
+elif [ "${ID}" = "ubuntu" ] ; then
+ package_manager="apt"
+
+elif [ "${ID}" = "debian" ] ; then
+  echo "NOK"
+
+fi
+
+
+
 
 nextdnsid=YourID
 
 function updated {
-    sudo apt update
-    sudo apt upgrade -y
-    sudo snap refresh
-    sudo apt autoremove -y
-    sudo apt autoclean -y
-    sudo apt clean -y
+    sudo $package_manager update
+    sudo $package_manager upgrade -y
+    sudo $package_manager autoremove -y
 }
 
 function install_basics {
-  sudo apt install  curl tilix flatpak yakuake openssh-server xterm zenity solaar \
-                    git vim htop most zsh python3-pip fonts-powerline libutempter0 bat \
-                    git-extras openjdk-18-jdk fzf apt-transport-https gnome-software-plugin-flatpak -y
-  sudo snap install lsd
-  pip3 install tldr setuptools
-  sudo apt install dconf-cli
+  sudo $package_manager install curl flatpak yakuake openssh-server xterm zenity solaar \
+                        git vim htop most zsh bat git-extras -y
   sudo dconf update
 }
 
-function swapfile_set {
-    sudo dd if=/dev/zero of=/swapfile bs=100M count=40 && sudo mkswap /swapfile
-    sudo chmod 600 /swapfile
-    sudo swapon /swapfile
-}
+function flatpak_packages {
+  flatpak update
+  flatpak install flathub \
+    com.protonvpn.www \
+    org.standardnotes.standardnotes \
+    me.timschneeberger.GalaxyBudsClient \
+    net.codeindustry.MasterPDFEditor \
+    io.github.peazip.PeaZip \
+    com.spotify.Client \
+    org.telegram.desktop \
+    io.github.flattool.Warehouse \
+    com.github.tchx84.Flatseal --noninteractive
 
-function dont_need_this {
-    sudo su - root -c 'cat <<EOT >>/etc/fstab
-tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
-tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
-tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
-/swapfile    none    swap  sw     0    0'
-}
-
-function sysctl_set {
-    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
-    sudo sysctl -p
-}
-
-function ssh_set {
-  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
-  sudo systemctl enable ssh
-  sudo systemctl start ssh
 }
 
 function install_fonts {
@@ -59,6 +56,40 @@ function install_fonts {
   wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts || exit
   unzip JetBrainsMono-2.242.zip
   fc-cache -f -v
+}
+
+
+function first_run {
+  updated
+  install_basics
+  flatpak_packages
+  install_fonts
+#  dont_need_this
+#  sysctl_set
+#  ssh_set
+
+#  repos_set
+}
+
+first_run
+
+
+# function dont_need_this {
+#     sudo su - root -c 'cat <<EOT >>/etc/fstab
+# tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
+# tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
+# tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
+# }
+
+function sysctl_set {
+    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
+    sudo sysctl -p
+}
+
+function ssh_set {
+  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
+  sudo systemctl enable ssh
+  sudo systemctl start ssh
 }
 
 function repos_set {
@@ -73,53 +104,24 @@ function repos_set {
 
 }
 
-function first_run {
-  updated
-  install_basics
-  swapfile_set
-  dont_need_this
-  sysctl_set
-  ssh_set
-  install_fonts
-  repos_set
-}
+
 
 function second_install {
   sudo apt install nextdns
   sudo apt install softmaker-office-nx -y
 }
 
-function flatpak_packages {
-  flatpak update
-  flatpak install flathub \
-    com.visualstudio.code \
-    com.protonvpn.www \
-    com.jetbrains.IntelliJ-IDEA-Community \
-    com.jetbrains.PyCharm-Community \
-    net.cozic.joplin_desktop \
-    me.timschneeberger.GalaxyBudsClient \
-    com.brave.Browser \
-    org.mozilla.firefox \
-    net.codeindustry.MasterPDFEditor \
-    io.github.peazip.PeaZip \
-    com.valvesoftware.Steam \
-    com.spotify.Client \
-    org.telegram.desktop \
-    dev.bsnes.bsnes \
-    io.github.flattool.Warehouse \
-    com.github.tchx84.Flatseal --noninteractive
 
-}
 
 function nextdns_set {
   sudo nextdns install -config $nextdnsid -report-client-info -auto-activate
 }
 
-first_run
-updated
-#nextdns_set CHANGE CONFIG ID!
-second_install
-flatpak_packages
+# first_run
+# updated
+# #nextdns_set CHANGE CONFIG ID!
+# second_install
+
 
 function install_zsh_ohmyzsh {
       printf "\n\n\n\n"
@@ -150,5 +152,5 @@ function config_zsh_ohmyzsh {
     #wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/p10k.zsh -O ~/.p10k.zsh
 }
 
-install_zsh_ohmyzsh
-config_zsh_ohmyzsh
+# install_zsh_ohmyzsh
+# config_zsh_ohmyzsh
