@@ -3,6 +3,8 @@
 # https://esli.blog.br/ram-e-swap
 # Config files on gists in https://gist.github.com/Esl1h
 
+source /etc/os-release
+
 nextdnsid=YourID
 
 function updated {
