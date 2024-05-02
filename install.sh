@@ -12,17 +12,13 @@ elif [ "${ID}" = "ubuntu" ] ; then
  package_manager="apt"
 
 else
-  echo "NOK"
+  exit
 
 fi
 
 
-
-
-nextdnsid=YourID
-
 function updated {
-    sudo $package_manager update
+    sudo $package_manager update -y
     sudo $package_manager upgrade -y
     sudo $package_manager autoremove -y
 }
@@ -77,23 +73,28 @@ first_run
 
 
 function repos_set {
-  # Softmaker Office
-  wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -
+
   # NextDNS
   sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg
+
+ # Softmaker Office
+  if [ "${ID}" = "fedora" ]; then
+    sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo
+  else
+    wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -
+  fi
+
 }
 
-function install_softmaker-office-nx {
+function install_softmaker {
   if [ "${ID}" = "fedora" ]; then
-      sudo -E dnf update -y
+      updated
       sudo -E dnf install softmaker-office-nx -y
 
-elif [ "${ID}" = "ubuntu" ] ; then
-      sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
-      sudo apt update
-      sudo apt install softmaker-office-nx
 else
-  echo "NOK"
+      sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
+      updated
+      sudo apt install softmaker-office-nx
 
 fi
 }
@@ -103,37 +104,36 @@ function install_nextdns {
   if [ "${ID}" = "fedora" ]; then
       sh -c "$(curl -sL https://nextdns.io/install)"
 
-elif [ "${ID}" = "ubuntu" ] ; then
+  else
       echo "deb [signed-by=/usr/share/keyrings/nextdns.gpg] https://repo.nextdns.io/deb stable main" | sudo tee /etc/apt/sources.list.d/nextdns.list
+      updated
+      sudo apt install nextdns -y
       read -p "enter your NextDNS ID: " nextdnsid
       sudo nextdns install -config $nextdnsid -report-client-info -auto-activate
-else
-  echo "NOK"
 
 fi
 }
 
 repos_set
 updated
-install_softmaker-office-nx
+install_softmaker
 install_nextdns
 
 
 
 function install_zsh_ohmyzsh {
-      printf "\n\n\n\n"
-      echo ################################
-      read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
+      # printf "\n\n\n\n"
+      # echo ################################
+      # read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
 
       # Install oh-my-zsh
-      sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+      sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - && exit)"
 
       # install some plugins to zsh - syntax high lighting and command auto suggestions
       mkdir -p ~/.oh-my-zsh/completions
       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
       git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-      # git clone --depth 1 https://github.com/junegunn/fzf.git             ~/.fzf
-      # ~/.fzf/install
+
 
       # powerlevel10k zsh theme
       git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k

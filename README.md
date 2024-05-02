@@ -1,4 +1,12 @@
-# UAI-FAI
+
+<img align="left" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1714668828239/5bdb9130-09f6-4e44-8f53-d91b18256197.png" height=120> 
+
+# UAI-FAI ![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
+
+<br>
+
+![Fedora](https://img.shields.io/badge/Fedora-294172?style=for-the-badge&logo=fedora&logoColor=white) 
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
 ## Ubuntu or Fedora After Install
 
@@ -40,3 +48,12 @@ O que você deve fazer:
 - Mudar!(está configurado para o meu ambiente)
 - execute com seu usuário
 - deve possuir permissão de sudo (inclusive 'sudo su')
+
+
+
+
+
+Icon/Logo ["opensource"](https://thenounproject.com/icon/opensource-4957970/) by [M. Oki Orlando](https://thenounproject.com/creator/orvipixel/) from Noun Project (CC BY 3.0)
+
+
+
