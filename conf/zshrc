@@ -54,8 +54,6 @@ plugins=(
     bgnotify
 )
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # Install Ruby Gems to ~/gems
 export GEM_HOME="$HOME/gems"
 export PATH="$HOME/gems/bin:$PATH"
@@ -74,22 +72,14 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # Setup alias and exports:
 export MANPAGER="/usr/bin/most -s"
-alias ls='lsd'
-alias l='ls -l'
-alias la='ls -a'
-alias lla='ls -la'
-alias lt='ls --tree'
-alias cat='batcat'
 
 
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
+# export GTK_IM_MODULE=ibus
+# export XMODIFIERS=@im=ibus
+# export QT_IM_MODULE=ibus
 
 
-source <(kubectl completion zsh)
-alias k=kubectl
+# source <(kubectl completion zsh)
+# alias k=kubectl
 #complete -F __start_kubectl k
 
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

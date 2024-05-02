@@ -12,6 +12,7 @@ elif [ "${ID}" = "ubuntu" ] ; then
  package_manager="apt"
 
 else
+  echo "(maybe) your distro not suported"
   exit
 
 fi
@@ -87,6 +88,7 @@ function install_softmaker {
 
 else
       sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
+      updated
       sudo apt install softmaker-office-nx
 
 fi
@@ -94,15 +96,7 @@ fi
 
 
 function install_nextdns {
-  # if [ "${ID}" = "fedora" ]; then
       sh -c "$(curl -sL https://nextdns.io/install)"
-
-#   else
-#       echo "deb [signed-by=/usr/share/keyrings/nextdns.gpg] https://repo.nextdns.io/deb stable main" | sudo tee /etc/apt/sources.list.d/nextdns.list
-#       sudo apt install nextdns -y
-#       read -p "enter your NextDNS ID: " nextdnsid
-#       sudo nextdns install -config $nextdnsid -report-client-info -auto-activate
-# fi
 }
 
 repos_set
@@ -113,9 +107,8 @@ install_nextdns
 
 
 function install_zsh_ohmyzsh {
-      # printf "\n\n\n\n"
-      # echo ################################
-      # read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
+      printf "\n\n\n\n"
+      read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
 
       # Install oh-my-zsh
       sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - && exit)"
@@ -125,23 +118,17 @@ function install_zsh_ohmyzsh {
       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
       git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
-
-      # powerlevel10k zsh theme
-      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
 }
 
-# function config_zsh_ohmyzsh {
-#     # config zshrc file:
-#     rm ~/.zshrc
-#     wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
-#     echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
-#     echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
+function config_zsh_ohmyzsh {
+    rm ~/.zshrc
+    wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
+    echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
+    echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
+}
 
-#     #wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/p10k.zsh -O ~/.p10k.zsh
-# }
-
-# install_zsh_ohmyzsh
-# config_zsh_ohmyzsh
+install_zsh_ohmyzsh
+config_zsh_ohmyzsh
 
 
 # function dont_need_this {
