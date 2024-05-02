@@ -106,7 +106,7 @@ install_nextdns
 
 
 
-function install_zsh_ohmyzsh {
+function set_ohmyzsh {
       printf "\n\n\n\n"
       read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
 
@@ -117,18 +117,16 @@ function install_zsh_ohmyzsh {
       mkdir -p ~/.oh-my-zsh/completions
       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
       git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-
-}
-
-function config_zsh_ohmyzsh {
       rm ~/.zshrc
       wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
       echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
       echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
+
 }
 
-install_zsh_ohmyzsh
-config_zsh_ohmyzsh
+
+set_ohmyzsh
+
 
 
 # function dont_need_this {
