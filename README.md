@@ -1,5 +1,5 @@
 
-<img align="left" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1714668828239/5bdb9130-09f6-4e44-8f53-d91b18256197.png" height=80 width=90> 
+<img align="left" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1714668828239/5bdb9130-09f6-4e44-8f53-d91b18256197.png" height=95 width=90> 
 
 ![Fedora](https://img.shields.io/badge/Fedora-294172?style=for-the-badge&logo=fedora&logoColor=white) 
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
