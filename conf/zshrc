@@ -1,22 +1,13 @@
 autoload -Uz compinit
 compinit
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
-#POWERLEVEL9K_MODE="nerdfont-complete"
-#POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs)
-#POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(ram status root_indicator background_jobs history time)
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
-# If set to an empty array, this variable will have no effect.
 ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
 # Uncomment the following line to use case-sensitive completion.
@@ -43,18 +34,16 @@ plugins=(
     rbenv
     ansible
     aws
-    docker-compose
+    # docker-compose
     gitfast
     terraform
     vscode
     git-extras
-    docker
+    # docker
     zsh-syntax-highlighting
     zsh-autosuggestions
     bgnotify
 )
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Install Ruby Gems to ~/gems
 export GEM_HOME="$HOME/gems"
@@ -74,22 +63,14 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # Setup alias and exports:
 export MANPAGER="/usr/bin/most -s"
-alias ls='lsd'
-alias l='ls -l'
-alias la='ls -a'
-alias lla='ls -la'
-alias lt='ls --tree'
-alias cat='batcat'
 
 
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
+# export GTK_IM_MODULE=ibus
+# export XMODIFIERS=@im=ibus
+# export QT_IM_MODULE=ibus
 
 
-source <(kubectl completion zsh)
-alias k=kubectl
-#complete -F __start_kubectl k
+# source <(kubectl completion zsh)
+# alias k=kubectl
+# complete -F __start_kubectl k
 
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
