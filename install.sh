@@ -6,14 +6,14 @@
 . /etc/os-release
 
 if [ "${ID}" = "fedora" ]; then
- package_manager="dnf"
+  package_manager="dnf"
 
 elif [ "${ID}" = "ubuntu" ] ; then
- package_manager="apt"
+  package_manager="apt"
 
 else
-  echo "(maybe) your distro not suported"
-  exit
+    echo "(maybe) your distro not suported"
+    exit
 
 fi
 
@@ -25,37 +25,37 @@ function updated {
 }
 
 function install_basics {
-  sudo $package_manager install curl flatpak yakuake openssh-server xterm zenity solaar \
+    sudo $package_manager install curl flatpak yakuake openssh-server xterm zenity solaar \
                         git vim htop most zsh bat git-extras -y
-  sudo dconf update
+    sudo dconf update
 }
 
 function add_flathub {
-  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 }
 
 function flatpak_packages {
-  flatpak update
-  flatpak install flathub \
-    com.protonvpn.www \
-    org.standardnotes.standardnotes \
-    me.timschneeberger.GalaxyBudsClient \
-    net.codeindustry.MasterPDFEditor \
-    io.github.peazip.PeaZip \
-    com.spotify.Client \
-    org.telegram.desktop \
-    io.github.flattool.Warehouse \
-    com.github.tchx84.Flatseal --noninteractive
+    flatpak update
+    flatpak install flathub \
+        com.protonvpn.www \
+        org.standardnotes.standardnotes \
+        me.timschneeberger.GalaxyBudsClient \
+        net.codeindustry.MasterPDFEditor \
+        io.github.peazip.PeaZip \
+        com.spotify.Client \
+        org.telegram.desktop \
+        io.github.flattool.Warehouse \
+        com.github.tchx84.Flatseal --noninteractive
 }
 
 function install_fonts {
   # install fonts to ZSH, Jetbrains and powerlevel theme
-  mkdir ~/.fonts
-  wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/ || exit
-  unzip Hack.zip
-  wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts || exit
-  unzip JetBrainsMono-2.242.zip
-  fc-cache -f -v
+      mkdir ~/.fonts
+      wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/ || exit
+      unzip Hack.zip
+      wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts || exit
+      unzip JetBrainsMono-2.242.zip
+      fc-cache -f -v
 }
 
 function first_run {
@@ -71,14 +71,14 @@ first_run
 
 function repos_set {
   # NextDNS
-  sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg
+    sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg
 
  # Softmaker Office
-  if [ "${ID}" = "fedora" ]; then
-    sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo
-  else
-    wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -
-  fi
+    if [ "${ID}" = "fedora" ]; then
+        sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo
+    else
+        wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -
+    fi
 
 }
 
@@ -121,10 +121,10 @@ function install_zsh_ohmyzsh {
 }
 
 function config_zsh_ohmyzsh {
-    rm ~/.zshrc
-    wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
-    echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
-    echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
+      rm ~/.zshrc
+      wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
+      echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
+      echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
 }
 
 install_zsh_ohmyzsh
