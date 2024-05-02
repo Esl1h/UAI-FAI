@@ -45,7 +45,6 @@ function flatpak_packages {
     org.telegram.desktop \
     io.github.flattool.Warehouse \
     com.github.tchx84.Flatseal --noninteractive
-
 }
 
 function install_fonts {
@@ -58,7 +57,6 @@ function install_fonts {
   fc-cache -f -v
 }
 
-
 function first_run {
   updated
   install_basics
@@ -70,10 +68,7 @@ function first_run {
 first_run
 
 
-
-
 function repos_set {
-
   # NextDNS
   sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg
 
@@ -88,12 +83,10 @@ function repos_set {
 
 function install_softmaker {
   if [ "${ID}" = "fedora" ]; then
-      updated
       sudo -E dnf install softmaker-office-nx -y
 
 else
       sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
-      updated
       sudo apt install softmaker-office-nx
 
 fi
@@ -101,17 +94,15 @@ fi
 
 
 function install_nextdns {
-  if [ "${ID}" = "fedora" ]; then
+  # if [ "${ID}" = "fedora" ]; then
       sh -c "$(curl -sL https://nextdns.io/install)"
 
-  else
-      echo "deb [signed-by=/usr/share/keyrings/nextdns.gpg] https://repo.nextdns.io/deb stable main" | sudo tee /etc/apt/sources.list.d/nextdns.list
-      updated
-      sudo apt install nextdns -y
-      read -p "enter your NextDNS ID: " nextdnsid
-      sudo nextdns install -config $nextdnsid -report-client-info -auto-activate
-
-fi
+#   else
+#       echo "deb [signed-by=/usr/share/keyrings/nextdns.gpg] https://repo.nextdns.io/deb stable main" | sudo tee /etc/apt/sources.list.d/nextdns.list
+#       sudo apt install nextdns -y
+#       read -p "enter your NextDNS ID: " nextdnsid
+#       sudo nextdns install -config $nextdnsid -report-client-info -auto-activate
+# fi
 }
 
 repos_set
