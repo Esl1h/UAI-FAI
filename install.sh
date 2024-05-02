@@ -117,6 +117,8 @@ function set_ohmyzsh {
       mkdir -p ~/.oh-my-zsh/completions
       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
       git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+      # powerlevel10k zsh theme
+      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
       rm ~/.zshrc
       wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
       echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
