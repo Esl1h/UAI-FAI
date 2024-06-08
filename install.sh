@@ -121,9 +121,6 @@ function set_ohmyzsh {
       echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
 }
 
-
-set_ohmyzsh
-
 function sysctl_set {
     sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
     sudo sysctl -p
@@ -144,7 +141,7 @@ EOF
 '
 }
 
-
+set_ohmyzsh
 sysctl_set
 ssh_set
 dont_need_this
