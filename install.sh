@@ -8,11 +8,11 @@
 if [ "${ID}" = "fedora" ]; then
   package_manager="dnf"
 
-elif [ "${ID}" = "ubuntu" ] ; then
+elif [ "${ID}" = "ubuntu" ]  || [ "${ID}" = "debian" ] ; then
   package_manager="apt"
 
 else
-    echo "(maybe) your distro not suported"
+    echo "(Maybe) your distro is not supported"
     exit
 
 fi
@@ -58,16 +58,6 @@ function install_fonts {
       fc-cache -f -v
 }
 
-function first_run {
-  updated
-  install_basics
-  add_flathub
-  flatpak_packages
-  install_fonts
-}
-
-first_run
-
 
 function repos_set {
   # NextDNS
@@ -78,6 +68,7 @@ function repos_set {
         sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo
     else
         wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -
+        sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
     fi
 
 }
@@ -85,12 +76,8 @@ function repos_set {
 function install_softmaker {
   if [ "${ID}" = "fedora" ]; then
       sudo -E dnf install softmaker-office-nx -y
-
-else
-      sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
-      updated
-      sudo apt install softmaker-office-nx
-
+  else
+      sudo apt install softmaker-office-nx -y
 fi
 }
 
@@ -99,6 +86,15 @@ function install_nextdns {
       sh -c "$(curl -sL https://nextdns.io/install)"
 }
 
+function first_run {
+  updated
+  install_basics
+  add_flathub
+  flatpak_packages
+  install_fonts
+}
+
+first_run
 repos_set
 updated
 install_softmaker
@@ -107,7 +103,7 @@ install_nextdns
 
 
 function set_ohmyzsh {
-      printf "\n\n\n\n"
+      clear
       read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
 
       # Install oh-my-zsh
@@ -123,28 +119,29 @@ function set_ohmyzsh {
       wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
       echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
       echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
-
 }
 
+function sysctl_set {
+    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
+    sudo sysctl -p
+}
+
+function ssh_set {
+  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
+  sudo systemctl enable ssh
+  sudo systemctl start ssh
+}
+
+function dont_need_this {
+    sudo su - root -c 'cat <<EOF >>/etc/fstab
+tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
+tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
+tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
+EOF
+'
+}
 
 set_ohmyzsh
-
-
-
-# function dont_need_this {
-#     sudo su - root -c 'cat <<EOT >>/etc/fstab
-# tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
-# tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
-# tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
-# }
-
-# function sysctl_set {
-#     sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
-#     sudo sysctl -p
-# }
-
-# function ssh_set {
-#   sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
-#   sudo systemctl enable ssh
-#   sudo systemctl start ssh
-# }
+sysctl_set
+ssh_set
+dont_need_this

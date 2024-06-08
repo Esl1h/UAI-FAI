@@ -2,15 +2,19 @@
 <img align="left" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1714668828239/5bdb9130-09f6-4e44-8f53-d91b18256197.png" height=95 width=90> 
 
 ![Fedora](https://img.shields.io/badge/Fedora-294172?style=for-the-badge&logo=fedora&logoColor=white) 
+![Debian](https://img.shields.io/badge/Debian-D70A53?style=for-the-badge&logo=debian&logoColor=white) 
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
 # UAI-FAI ![Shell](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
 "Ubuntu After Install" and "Fedora After Install". Bash script to run after install with my personal sets.
 
+Fun fact: uai-fai is the phonetic form to ````ˈwaɪˌfaɪ```` , a Brasilian English accent way to say wifi.
 
 ## Ubuntu or Fedora After Install
 
+Tested on Debian (>10), Ubuntu (>20.04) and Fedora (> 38).
+Currently I use on laptop with Fedora 40, workstation PC with Ubuntu Studio 24.04 and a Home Server (Intel NUC) with Debian 12.
 
 ### Why?
 I have three laptops, and I like to:
@@ -34,7 +38,9 @@ What this shellscript will do:
 - set repo and install softmaker office NX
 - install NextDNS
 - install and setup zsh + oh-my-zsh and powerlevel10k theme
-- ~~configure swapfile and change fstab to logs over tmpfs~~
+- change fstab to logs over tmpfs
+- configs to ssh client (my enviroments on cloud, networks and datacenters)
+- configs to sysctl (performance on my home server lab)
 
 
 
