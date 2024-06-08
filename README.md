@@ -38,7 +38,9 @@ What this shellscript will do:
 - set repo and install softmaker office NX
 - install NextDNS
 - install and setup zsh + oh-my-zsh and powerlevel10k theme
-- ~~configure swapfile and change fstab to logs over tmpfs~~
+- change fstab to logs over tmpfs
+- configs to ssh client (my enviroments on cloud, networks and datacenters)
+- configs to sysctl (performance on my home server lab)
 
 
 
