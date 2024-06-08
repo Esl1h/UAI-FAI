@@ -136,10 +136,12 @@ function ssh_set {
 }
 
 function dont_need_this {
-    sudo su - root -c 'cat <<EOT >>/etc/fstab
+    sudo su - root -c 'cat <<EOF >>/etc/fstab
 tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
 tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
 tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
+EOF
+'
 }
 
 
