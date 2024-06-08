@@ -9,9 +9,12 @@
 
 "Ubuntu After Install" and "Fedora After Install". Bash script to run after install with my personal sets.
 
+Fun fact: uai-fai is the phonetic form to ````ˈwaɪˌfaɪ```` , a Brasilian English accent way to say wifi.
 
 ## Ubuntu or Fedora After Install
 
+Tested on Debian (>10), Ubuntu (>20.04) and Fedora (> 38).
+Currently I use on laptop with Fedora 40, workstation PC with Ubuntu Studio 24.04 and a Home Server (Intel NUC) with Debian 12.
 
 ### Why?
 I have three laptops, and I like to:
