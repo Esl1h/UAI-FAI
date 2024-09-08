@@ -1,5 +1,6 @@
 * text=auto eol=lf
 *.bat eol=crlf
+*.sh text eol=lf
 
 *.v linguist-language=V
 *.vv linguist-language=V
