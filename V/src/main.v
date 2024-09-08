@@ -40,6 +40,56 @@ fn main() {
 
         flathub()
         flatpak_packages()
+
+
+		fonts_dir := os.home_dir() + '/.fonts'
+    	if !os.exists(fonts_dir) {
+        	os.mkdir_all(fonts_dir)! //or {
+            	//println('Failed to create ~/.fonts directory')
+            //return
+        }
+
+
+    	hack_url := 'https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip'
+    		os.system('wget -c $hack_url -P $fonts_dir') //or {
+        //println('Failed to download Hack.zip')
+        //return
+
+    os.chdir(fonts_dir)! //or {
+        //println('Failed to change directory to ~/.fonts')
+        //return
+
+
+    os.system('unzip Hack.zip') //or {
+        //println('Failed to unzip Hack.zip')
+        //return
+
+
+    local_fonts_dir := os.home_dir() + '/.local/share/fonts'
+    if !os.exists(local_fonts_dir) {
+        os.mkdir_all(local_fonts_dir)! //or {
+            //println('Failed to create ~/.local/share/fonts directory')
+            //return
+        }
+
+
+    jetbrains_url := 'https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip'
+    os.system('wget -c $jetbrains_url -P $local_fonts_dir') //or {
+        //println('Failed to download JetBrainsMono-2.242.zip')
+        //return
+
+
+    os.chdir(local_fonts_dir)! //or {
+        //println('Failed to change directory to ~/.local/share/fonts')
+        //return
+
+    os.system('unzip JetBrainsMono-2.242.zip') //or {
+        //println('Failed to unzip JetBrainsMono-2.242.zip')
+        //return
+
+    os.system('fc-cache -f -v') //or {
+        //println('Failed to refresh font cache')
+
 }
 
 fn updated(package_manager string) {
@@ -62,15 +112,12 @@ fn flatpak_packages() {
         system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.codeindustry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
 }
 
-// function install_fonts {
-//   # install fonts to ZSH, Jetbrains and powerlevel theme
-//       mkdir ~/.fonts
-//       wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/ || exit
-//       unzip Hack.zip
-//       wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts || exit
-//       unzip JetBrainsMono-2.242.zip
-//       fc-cache -f -v
-// }
+
+
+
+
+
+
 
 // function repos_set {
 //   # NextDNS
