@@ -1,81 +1,66 @@
 module main
 
-import os {user_os, execute, read_file, system}
-
+import os { read_file, system }
 
 fn main() {
+        os_release := read_file('/etc/os-release')! // or {
+        // println('Failed to read /etc/os-release')
+        // return
+        //}
 
-    os_release := os.read_file('/etc/os-release')! //or {
-        //println('Failed to read /etc/os-release')
-        //return
-    //}
+        mut id := ''
 
-    mut id := ''
-
-    for line in os_release.split_into_lines() {
-        if line.starts_with('ID=') {
-            id = line.split('=')[1].trim('"')
-            break
+        for line in os_release.split_into_lines() {
+                if line.starts_with('ID=') {
+                        id = line.split('=')[1].trim('"')
+                        break
+                }
         }
-    }
 
-    package_manager := match id {
-        'fedora' { 'dnf' }
-        'ubuntu', 'debian' { 'apt' }
-        else {
-            println('(Maybe) your distro is not supported')
-            return
+        package_manager := match id {
+                'fedora' {
+                        'dnf'
+                }
+                'ubuntu', 'debian' {
+                        'apt'
+                }
+                else {
+                        println('(Maybe) your distro is not supported')
+                        return
+                }
         }
-    }
 
-    println('Package manager: $package_manager')
-	if package_manager != '' {
-        updated(package_manager)
-		install_basics(package_manager)
-    } else {
-        println('Could not determine the package manager.')
-    }
+        println('Package manager: ${package_manager}')
+        if package_manager != '' {
+                updated(package_manager)
+                install_basics(package_manager)
+        } else {
+                println('Could not determine the package manager.')
+        }
 
-	flathub()
-	flatpak_packages()
-
-
-
+        flathub()
+        flatpak_packages()
 }
 
 fn updated(package_manager string) {
-    os.system('sudo $package_manager update -y')
-    os.system('sudo $package_manager upgrade -y')
-    os.system('sudo $package_manager autoremove -y')
+        system('sudo ${package_manager} update -y')
+        system('sudo ${package_manager} upgrade -y')
+        system('sudo ${package_manager} autoremove -y')
 }
 
 fn install_basics(package_manager string) {
-    os.system('sudo $package_manager install curl flatpak yakuake openssh-server xterm zenity solaar git vim htop most zsh bat git-extras -y')
-    os.system('sudo dconf update')
+        system('sudo ${package_manager} install curl flatpak yakuake openssh-server xterm zenity solaar git vim htop most zsh bat git-extras -y')
+        system('sudo dconf update')
 }
 
 fn flathub() {
-    os.system('sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
+        system('sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo')
 }
 
 fn flatpak_packages() {
-    os.system('flatpak update')
-	os.system('flatpak install flathub \
-        com.protonvpn.www \
-        org.standardnotes.standardnotes \
-        me.timschneeberger.GalaxyBudsClient \
-        net.codeindustry.MasterPDFEditor \
-        io.github.peazip.PeaZip \
-        com.spotify.Client \
-        org.telegram.desktop \
-        io.github.flattool.Warehouse \
-        com.github.tchx84.Flatseal --noninteractive')
+        system('flatpak update')
+        system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.codeindustry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
 }
-
-
-
-
-
 
 // function install_fonts {
 //   # install fonts to ZSH, Jetbrains and powerlevel theme
@@ -86,7 +71,6 @@ fn flatpak_packages() {
 //       unzip JetBrainsMono-2.242.zip
 //       fc-cache -f -v
 // }
-
 
 // function repos_set {
 //   # NextDNS
@@ -110,7 +94,6 @@ fn flatpak_packages() {
 // fi
 // }
 
-
 // function install_nextdns {
 //       sh -c "$(curl -sL https://nextdns.io/install)"
 // }
@@ -124,8 +107,6 @@ fn flatpak_packages() {
 // updated
 // install_softmaker
 // install_nextdns
-
-
 
 // function set_ohmyzsh {
 //       clear
