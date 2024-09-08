@@ -1,8 +1,8 @@
 
-<img align="left" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1714668828239/5bdb9130-09f6-4e44-8f53-d91b18256197.png" height=95 width=90> 
+<img align="left" src="https://cdn.hashnode.com/res/hashnode/image/upload/v1714668828239/5bdb9130-09f6-4e44-8f53-d91b18256197.png" height=95 width=90>
 
-![Fedora](https://img.shields.io/badge/Fedora-294172?style=for-the-badge&logo=fedora&logoColor=white) 
-![Debian](https://img.shields.io/badge/Debian-D70A53?style=for-the-badge&logo=debian&logoColor=white) 
+![Fedora](https://img.shields.io/badge/Fedora-294172?style=for-the-badge&logo=fedora&logoColor=white)
+![Debian](https://img.shields.io/badge/Debian-D70A53?style=for-the-badge&logo=debian&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
 # UAI-FAI ![Shell](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
@@ -20,7 +20,7 @@ Currently I use on laptop with Fedora 40, workstation PC with Ubuntu Studio 24.0
 I have three laptops, and I like to:
 - have the same environment at all
 - In each new distro release, I make a full and cleaned install
-  
+
 So I created this simple script.
 
 You must:
@@ -42,6 +42,10 @@ What this shellscript will do:
 - configs to ssh client (my enviroments on cloud, networks and datacenters)
 - configs to sysctl (performance on my home server lab)
 
+
+## It's a just for fun script
+
+And I am rewritting in Vlang because I have free time ;-)
 
 
 
