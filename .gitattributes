@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.bat eol=crlf
+*.sh text eol=lf
+
+*.v linguist-language=V
+*.vv linguist-language=V
+*.vsh linguist-language=V
+v.mod linguist-language=V
+.vdocignore linguist-language=ignore
