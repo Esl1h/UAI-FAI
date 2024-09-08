@@ -3,13 +3,15 @@ module main
 import os { read_file, system }
 
 fn main() {
+
+		repos_set()
+
         os_release := read_file('/etc/os-release')! // or {
         // println('Failed to read /etc/os-release')
         // return
         //}
 
         mut id := ''
-
         for line in os_release.split_into_lines() {
                 if line.starts_with('ID=') {
                         id = line.split('=')[1].trim('"')
@@ -37,6 +39,17 @@ fn main() {
         } else {
                 println('Could not determine the package manager.')
         }
+
+		if os_release.contains('ID=fedora') {
+			system('sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo')
+			updated(package_manager)
+			system('sudo -E dnf install softmaker-office-nx -y')
+		} else {
+			system('wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -')
+			system('sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee /etc/apt/sources.list.d/softmaker.list')
+			updated(package_manager)
+			system('sudo apt install softmaker-office-nx -y')
+		}
 
         flathub()
         flatpak_packages()
@@ -83,7 +96,11 @@ fn main() {
 
         system('fc-cache -f -v') // or {
         // println('Failed to refresh font cache')
+
+
 }
+
+
 
 fn updated(package_manager string) {
         system('sudo ${package_manager} update -y')
@@ -105,58 +122,12 @@ fn flatpak_packages() {
         system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.codeindustry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
 }
 
+fn repos_set() {
+    system('sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg')
+	system('sh -c "$(curl -sL https://nextdns.io/install)"')
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function repos_set {
-//   # NextDNS
-//     sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg
-
-//  # Softmaker Office
-//     if [ "${ID}" = "fedora" ]; then
-//         sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo
-//     else
-//         wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -
-//         sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
-//     fi
-
-// }
-
-// function install_softmaker {
-//   if [ "${ID}" = "fedora" ]; then
-//       sudo -E dnf install softmaker-office-nx -y
-//   else
-//       sudo apt install softmaker-office-nx -y
-// fi
-// }
-
-// function install_nextdns {
-//       sh -c "$(curl -sL https://nextdns.io/install)"
-// }
-
-// function first_run {
-//   install_fonts
-// }
-
-// first_run
-// repos_set
-// updated
-// install_softmaker
-// install_nextdns
 
 // function set_ohmyzsh {
 //       clear
