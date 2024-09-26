@@ -116,18 +116,18 @@ function set_ohmyzsh {
       # powerlevel10k zsh theme
       git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
       rm ~/.zshrc
-      wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
+      wget -c https://raw.githubusercontent.com/Esl1h/dotfiles/main/.zshrc -O ~/.zshrc
       echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
       echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
 }
 
 function sysctl_set {
-    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/refs/heads/main/etc/sysctl.conf >>/etc/sysctl.conf'
+    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/sysctl.conf >>/etc/sysctl.conf'
     sudo sysctl -p
 }
 
 function ssh_set {
-  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/refs/heads/main/etc/ssh/ssh_config >/etc/ssh/ssh_config'
+  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/ssh/ssh_config >/etc/ssh/ssh_config'
   sudo systemctl enable ssh
   sudo systemctl start ssh
 }
