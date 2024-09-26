@@ -1,7 +1,7 @@
 #!/bin/bash
 # https://esli.blog.br/guia-ssd-no-linux
 # https://esli.blog.br/ram-e-swap
-# Config files on gists in https://gist.github.com/Esl1h
+# Config files on my https://github.com/Esl1h/dotfiles
 
 . /etc/os-release
 
@@ -26,7 +26,7 @@ function updated {
 
 function install_basics {
     sudo $package_manager install curl flatpak yakuake openssh-server xterm zenity solaar \
-                        git vim htop most zsh bat git-extras -y
+                        git vim htop most zsh bat git-extras shellcheck -y
     sudo dconf update
 }
 
@@ -122,12 +122,12 @@ function set_ohmyzsh {
 }
 
 function sysctl_set {
-    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
+    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/refs/heads/main/etc/sysctl.conf >>/etc/sysctl.conf'
     sudo sysctl -p
 }
 
 function ssh_set {
-  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
+  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/refs/heads/main/etc/ssh/ssh_config >/etc/ssh/ssh_config'
   sudo systemctl enable ssh
   sudo systemctl start ssh
 }
@@ -145,3 +145,16 @@ set_ohmyzsh
 sysctl_set
 ssh_set
 dont_need_this
+
+
+
+function vim {
+  # install VIm-Plug
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  # vimrc from my dotfiles repo
+  curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc
+  #
+  read -n 1 -s -r -p "Open vim and run \':PlugInstall! and :PlugUpdate!\', ok? Press any key to continue"
+}
+
+vim
