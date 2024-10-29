@@ -5,38 +5,73 @@
 
 . /etc/os-release
 
-if [ "${ID}" = "fedora" ]; then
-  package_manager="dnf"
+LOGFILE="uai-fai-install.log"
+exec > >(tee -i $LOGFILE) 2>&1
 
-elif [ "${ID}" = "ubuntu" ]  || [ "${ID}" = "debian" ] ; then
-  package_manager="apt"
-
-else
-    echo "(Maybe) your distro is not supported"
-    exit
-
+DRY_RUN=0
+if [ "$1" == "--dry-run" ]; then
+    echo "Running in dry run mode. No actual changes will be made."
+    DRY_RUN=1
 fi
 
-
-function updated {
-    sudo $package_manager update -y
-    sudo $package_manager upgrade -y
-    sudo $package_manager autoremove -y
+function run_command {
+    if [ $DRY_RUN -eq 1 ]; then
+        echo "[DRY RUN] $@"
+    else
+        eval "$@"
+    fi
 }
 
-function install_basics {
-    sudo $package_manager install curl flatpak yakuake openssh-server xterm zenity solaar \
-                        git vim htop most zsh bat git-extras shellcheck -y
-    sudo dconf update
+# Error handling function
+function error_exit {
+    echo "$1" >&2
+    exit 1
 }
+
+function set_package_manager {
+  if [ "${ID}" = "fedora" ]; then
+    package_manager="dnf"
+
+  elif [ "${ID}" = "ubuntu" ]  || [ "${ID}" = "debian" ] ; then
+    package_manager="apt"
+
+  else
+      echo "(Maybe) your distro is not supported"
+      exit 1
+
+  fi
+}
+
+function update_system {
+    run_command "sudo $package_manager update -y" || error_exit "Failed to update system"
+    run_command "sudo $package_manager upgrade -y" || error_exit "Failed to upgrade system"
+    run_command "sudo $package_manager autoremove -y" || error_exit "Failed to autoremove packages"
+}
+
+
+function install_apps {
+    echo "Installing common software packages..."
+    common_apps=(curl flatpak yakuake openssh-server xterm zenity solaar git vim htop most zsh bat git-extras shellcheck wget)
+
+    for app in "${common_apps[@]}"; do
+        if ! command -v "$app" &> /dev/null; then
+            run_command "sudo $package_manager install $app -y" || error_exit "Failed to install $app"
+        else
+            echo "$app is already installed."
+        fi
+    done
+}
+
+
 
 function add_flathub {
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-}
+    run_command "sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo" || error_exit "Failed to add flathub"
+    }
+
 
 function flatpak_packages {
-    flatpak update
-    flatpak install flathub \
+    run_command "flatpak update -y" || error_exit "Failed to update flatpak"
+    run_command "flatpak install flathub \
         com.protonvpn.www \
         org.standardnotes.standardnotes \
         me.timschneeberger.GalaxyBudsClient \
@@ -45,70 +80,63 @@ function flatpak_packages {
         com.spotify.Client \
         org.telegram.desktop \
         io.github.flattool.Warehouse \
-        com.github.tchx84.Flatseal --noninteractive
+        com.github.tchx84.Flatseal --noninteractive" || error_exit "Failed to install flatpak/flathub packages"
+}
+
+function download_fonts {
+    run_command "mkdir -p $HOME/.local/share/fonts"
+    echo "Downloading Hack font..."
+    run_command "wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/Hack.zip -P $HOME/.local/share/fonts/"
+
+    echo "Downloading JetBrainsMono font..."
+    run_command "wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip -P $HOME/.local/share/fonts/"
+    echo "Font downloads completed."
 }
 
 function install_fonts {
-  # install fonts to ZSH, Jetbrains and powerlevel theme
-      mkdir ~/.fonts
-      wget -c https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip -P ~/.fonts/ && cd ~/.fonts/ || exit
-      unzip Hack.zip
-      wget -c https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip -P ~/.local/share/fonts && cd ~/.local/share/fonts || exit
-      unzip JetBrainsMono-2.242.zip
-      fc-cache -f -v
+    run_command "unzip -o $HOME/.local/share/fonts/Hack.zip -d $HOME/.local/share/fonts/" || error_exit "Failed to unzip Hack font"
+    run_command "unzip -o $HOME/.local/share/fonts/JetBrainsMono-2.304.zip -d $HOME/.local/share/fonts/" || error_exit "Failed to unzip JetBrainsMono font"
+    run_command "fc-cache -f -v" || error_exit "Failed to refresh font cache"
 }
 
 
 function repos_set {
   # NextDNS
-    sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg
+    run_command "sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg" || error_exit "Failed to install nextdns"
 
  # Softmaker Office
     if [ "${ID}" = "fedora" ]; then
-        sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo
+        run_command "sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo"
     else
-        wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -
-        sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list
+        run_command "wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -"
+        run_command "sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list"
     fi
 
 }
 
 function install_softmaker {
   if [ "${ID}" = "fedora" ]; then
-      sudo -E dnf install softmaker-office-nx -y
+       run_command "sudo -E dnf install softmaker-office-nx -y"
   else
-      sudo apt install softmaker-office-nx -y
+       run_command "sudo apt install softmaker-office-nx -y"
 fi
 }
 
 
 function install_nextdns {
-      sh -c "$(curl -sL https://nextdns.io/install)"
+      run_command "sh -c '$(curl -sL https://nextdns.io/install)'"
 }
 
-function first_run {
-  updated
-  install_basics
-  add_flathub
-  flatpak_packages
-  install_fonts
+# Install Zsh and Oh-My-Zsh
+function install_zsh {
+    if [ ! -d "$HOME/.oh-my-zsh" ]; then
+        echo "Installing oh-my-zsh..."
+        read -n 1 -s -r -p "After install ohmyzsh, press CTRL + D to continue, ok? Now press any key..."
+        run_command "sh -c \"\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)\"" || error_exit "Failed to install oh-my-zsh"
+    fi
 }
-
-first_run
-repos_set
-updated
-install_softmaker
-install_nextdns
-
-
 
 function set_ohmyzsh {
-      clear
-      read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
-
-      # Install oh-my-zsh
-      sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - && exit)"
-
       # install some plugins to zsh - syntax high lighting and command auto suggestions
       mkdir -p ~/.oh-my-zsh/completions
       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
@@ -141,20 +169,36 @@ EOF
 '
 }
 
-set_ohmyzsh
-sysctl_set
-ssh_set
-dont_need_this
-
-
-
-function vim {
+function set_vim {
   # install VIm-Plug
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   # vimrc from my dotfiles repo
   curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc
   #
-  read -n 1 -s -r -p "Open vim and run \':PlugInstall! and :PlugUpdate!\', ok? Press any key to continue"
+  read -n 1 -s -r -p "Open vim to install and update plugins, ok? Press any key to continue"
 }
 
-vim
+
+
+main() {
+  set_package_manager
+  update_system
+  install_apps
+  add_flathub
+  flatpak_packages
+  download_fonts
+  install_fonts
+  run_command "sudo dconf update" || error_exit "Failed to update dconf" #gnome only?
+  repos_set
+  update_system
+  install_softmaker
+  install_nextdns
+  install_zsh
+  set_ohmyzsh
+  sysctl_set
+  ssh_set
+  dont_need_this
+  set_vim
+}
+
+main
