@@ -104,24 +104,26 @@ function repos_set {
   # NextDNS
     run_command "sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg" || error_exit "Failed to install nextdns"
 
- # Softmaker Office
+ # Softmaker Office and Brave Browser
     if [ "${ID}" = "fedora" ]; then
         run_command "sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo"
+        run_command "sudo $package_manager install dnf-plugins-core -y"
+        run_command "sudo $package_manager config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
+        run_command "sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc"
     else
         run_command "wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -"
         run_command "sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list"
+        run_command "sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
+        echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"| sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+
     fi
 
 }
 
-function install_softmaker {
-  if [ "${ID}" = "fedora" ]; then
-       run_command "sudo -E dnf install softmaker-office-nx -y"
-  else
-       run_command "sudo apt install softmaker-office-nx -y"
-fi
+function install_newapps {
+  update_system
+  run_command "sudo $package_manager install brave-browser softmaker-office-nx -y"
 }
-
 
 function install_nextdns {
       run_command "sh -c '$(curl -sL https://nextdns.io/install)'"
@@ -191,7 +193,7 @@ main() {
   run_command "sudo dconf update" || error_exit "Failed to update dconf" #gnome only?
   repos_set
   update_system
-  install_softmaker
+  install_newapps
   install_nextdns
   install_zsh
   set_ohmyzsh
