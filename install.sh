@@ -63,7 +63,7 @@ function install_apps {
     if [ "${ID}" = "fedora" ]; then
         run_command "sudo $package_manager install wireguard-tools -y
     else
-        run_command "sudo $package_manager install wireguard -y
+        run_command "sudo $package_manager install wireguard -y"
     fi
 }
 
