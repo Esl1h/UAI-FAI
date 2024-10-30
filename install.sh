@@ -115,14 +115,23 @@ function repos_set {
     if [ "${ID}" = "fedora" ]; then
         run_command "sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo"
         run_command "sudo $package_manager install dnf-plugins-core -y"
-        run_command "sudo $package_manager config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
+
+        if [ $VERSION_ID -le 40 ]; then
+            # Fedora =< 40
+            run_command "sudo $package_manager config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
+            else
+                # Fedora >= 41
+                run_command "sudo wget -qO brave-browser.repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
+                sed -i '/autorefresh/s/^/#/' brave-browser.repo
+                run_command "sudo $package_manager config-manager addrepo --from-repofile=brave-browser.repo"
+            fi
         run_command "sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc"
+
     else
         run_command "wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -"
         run_command "sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee  /etc/apt/sources.list.d/softmaker.list"
         run_command "sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
         echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"| sudo tee /etc/apt/sources.list.d/brave-browser-release.list
-
     fi
 
 }
