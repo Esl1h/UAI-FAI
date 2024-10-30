@@ -51,7 +51,7 @@ function update_system {
 
 function install_apps {
     echo "Installing common software packages..."
-    common_apps=(curl flatpak yakuake openssh-server xterm zenity solaar git vim htop most zsh bat git-extras shellcheck wget)
+    common_apps=(curl flatpak yakuake openssh-server xterm zenity solaar git vim htop most zsh bat git-extras shellcheck wget kleopatra)
 
     for app in "${common_apps[@]}"; do
         if ! command -v "$app" &> /dev/null; then
@@ -60,6 +60,12 @@ function install_apps {
             echo "$app is already installed."
         fi
     done
+
+    if [ "${ID}" = "fedora" ]; then
+        run_command "sudo $package_manager install wireguard-tools -y
+    else
+        run_command "sudo $package_manager install wireguard -y
+    fi
 }
 
 
@@ -79,6 +85,8 @@ function flatpak_packages {
         io.github.peazip.PeaZip \
         com.spotify.Client \
         org.telegram.desktop \
+        org.torproject.torbrowser-launcher \
+        org.onionshare.OnionShare \
         io.github.flattool.Warehouse \
         com.github.tchx84.Flatseal --noninteractive" || error_exit "Failed to install flatpak/flathub packages"
 }
