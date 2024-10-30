@@ -1,6 +1,5 @@
 #!/bin/bash
-# https://esli.blog.br/guia-ssd-no-linux
-# https://esli.blog.br/ram-e-swap
+# https://esli.blog.br/uai-fai
 # Config files on my https://github.com/Esl1h/dotfiles
 
 . /etc/os-release
