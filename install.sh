@@ -138,26 +138,26 @@ function install_zsh {
 
 function set_ohmyzsh {
       # install some plugins to zsh - syntax high lighting and command auto suggestions
-      mkdir -p ~/.oh-my-zsh/completions
-      git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-      git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+      run_command "mkdir -p ~/.oh-my-zsh/completions"
+      run_command "git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+      run_command "git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
       # powerlevel10k zsh theme
-      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
-      rm ~/.zshrc
-      wget -c https://raw.githubusercontent.com/Esl1h/dotfiles/main/.zshrc -O ~/.zshrc
+      run_command "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k"
+      run_command "rm ~/.zshrc"
+      run_command "wget -c https://raw.githubusercontent.com/Esl1h/dotfiles/main/.zshrc -O ~/.zshrc"
       echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
       echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
 }
 
 function sysctl_set {
-    sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/sysctl.conf >>/etc/sysctl.conf'
-    sudo sysctl -p
+    run_command "sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/sysctl.conf >>/etc/sysctl.conf' "
+    run_command "sudo sysctl -p"
 }
 
 function ssh_set {
-  sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/ssh/ssh_config >/etc/ssh/ssh_config'
-  sudo systemctl enable ssh
-  sudo systemctl start ssh
+  run_command "sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/ssh/ssh_config >/etc/ssh/ssh_config' "
+  run_command "sudo systemctl enable ssh"
+  run_command "sudo systemctl start ssh"
 }
 
 function dont_need_this {
@@ -171,9 +171,9 @@ EOF
 
 function set_vim {
   # install VIm-Plug
-  curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  run_command "curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
   # vimrc from my dotfiles repo
-  curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc
+  run_command "curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc"
   #
   read -n 1 -s -r -p "Open vim to install and update plugins, ok? Press any key to continue"
 }
