@@ -206,7 +206,7 @@ main() {
   flatpak_packages
   download_fonts
   install_fonts
-  run_command "sudo dconf update" || error_exit "Failed to update dconf" #gnome only?
+  # run_command "sudo dconf update" || error_exit "Failed to update dconf" #gnome only?
   repos_set
   update_system
   install_newapps
