@@ -13,7 +13,8 @@ Fun fact: uai-fai is the phonetic form to ````ˈwaɪˌfaɪ```` , a Brasilian En
 
 ## Ubuntu or Fedora After Install
 
-Tested on Debian (>10), Ubuntu (>20.04) and Fedora (> 38).
+Tested since Debian (>10), Ubuntu (>20.04) and Fedora (> 38).
+Latest was tested on Debian 12.7, Ubuntu 24.10 and Fedora 41.
 Currently I use on laptop with Fedora 40, workstation PC with Ubuntu Studio 24.04 and a Home Server (Intel NUC) with Debian 12.
 
 ### Why?
