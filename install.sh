@@ -142,7 +142,7 @@ function install_newapps {
 }
 
 function install_nextdns {
-      run_command "sh -c '$(curl -sL https://nextdns.io/install)'"
+      run_command "sh -c \"$(curl -sL https://nextdns.io/install)\""
 }
 
 # Install Zsh and Oh-My-Zsh
