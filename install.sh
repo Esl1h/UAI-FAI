@@ -5,7 +5,7 @@
 . /etc/os-release
 
 LOGFILE="uai-fai-install.log"
-exec > >(tee -i $LOGFILE) 2>&1
+exec > >(sudo tee -i $LOGFILE) 2>&1
 
 DRY_RUN=0
 if [ "$1" == "--dry-run" ]; then
@@ -175,8 +175,8 @@ function sysctl_set {
 
 function ssh_set {
   run_command "sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/ssh/ssh_config >/etc/ssh/ssh_config' "
-  run_command "sudo systemctl enable ssh"
-  run_command "sudo systemctl start ssh"
+  run_command "sudo systemctl enable sshd"
+  run_command "sudo systemctl start sshd"
 }
 
 function dont_need_this {
@@ -189,6 +189,7 @@ EOF
 }
 
 function set_vim {
+  run_command "mkdir -p ~/.vim/autoload"
   # install VIm-Plug
   run_command "curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
   # vimrc from my dotfiles repo
