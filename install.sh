@@ -142,7 +142,8 @@ function install_newapps {
 }
 
 function install_nextdns {
-      run_command "sh -c \"$(curl -sL https://nextdns.io/install)\""
+      run_command "sudo curl -sL https://nextdns.io/install > ~/nextdns-install.sh && chmod +x ~/nextdns-install.sh"
+      run_command "sudo ~/nextdns-install.sh install"
 }
 
 # Install Zsh and Oh-My-Zsh
