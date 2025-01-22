@@ -6,10 +6,10 @@ fn main() {
 
 		repos_set()
 
-        os_release := read_file('/etc/os-release')! // or {
-        // println('Failed to read /etc/os-release')
-        // return
-        //}
+        os_release := read_file('/etc/os-release')  or {
+         println('Failed to read /etc/os-release')
+         return
+        }
 
         mut id := ''
         for line in os_release.split_into_lines() {
