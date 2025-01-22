@@ -80,7 +80,7 @@ function flatpak_packages {
         com.protonvpn.www \
         org.standardnotes.standardnotes \
         me.timschneeberger.GalaxyBudsClient \
-        net.codeindustry.MasterPDFEditor \
+        net.code_industry.MasterPDFEditor \
         io.github.peazip.PeaZip \
         com.spotify.Client \
         org.telegram.desktop \
