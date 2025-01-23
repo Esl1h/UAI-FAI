@@ -71,8 +71,8 @@ fn main() {
 
 	installhack := os.system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
 	if installhack != 0 {
-	println('Failed to download Hack.zip')
-	return
+		println('Failed to download Hack.zip')
+		return
 	}
 
         os.chdir(local_fonts_dir) or {
@@ -80,53 +80,24 @@ fn main() {
          return
 	}
 
-        system('unzip Hack.zip')  //or {
-        // println('Failed to unzip Hack.zip')
-        // return
-	//}
+        system('unzip Hack.zip')
 
         jetbrains_fonts := 'https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip'
-        system('wget -c ${jetbrains_fonts} -P ${local_fonts_dir}')  //or {
-       //  println('Failed to download JetBrainsMono-2.242.zip')
-       //  return
-	// }
+        system('wget -c ${jetbrains_fonts} -P ${local_fonts_dir}')
 
         os.chdir(local_fonts_dir)  or {
          println('Failed to change directory to ~/.local/share/fonts')
          return
 	}
 
-        system('unzip JetBrainsMono-2.242.zip') // or {
-       //  println('Failed to unzip JetBrainsMono-2.242.zip')
-       //  return
-	// }
+        system('unzip JetBrainsMono-2.242.zip')
 
-        system('fc-cache -f -v')  // or {
-       //  println('Failed to refresh font cache')
-       //  return
-	// }
+        system('fc-cache -f -v')
 
  	nextdns()
         flathub()
         flatpak_packages()
-
-    if os.getenv('ID') == 'fedora' {
-        run_command('sudo ${package_manager} install dnf-plugins-core -y')
-
-        if os.getenv('VERSION_ID').int() <= 40 {
-            // Fedora <= 40
-            run_command('sudo ${package_manager} config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo')
-        } else {
-            // Fedora >= 41
-            run_command('sudo ${package_manager} config-manager addrepo addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo')
-        }
-        run_command('sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc')
-	run_command('sudo ${package_manager} install brave-browser -y')
-    } else {
-        run_command('sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg')
-        run_command('echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list')
-    }
-
+	brave()
 }
 
 
@@ -148,15 +119,25 @@ fn flathub() {
 
 fn flatpak_packages() {
         system('flatpak update')
-        system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.code_industry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
+        system('flatpak install flathub com.protonvpn.www \
+					org.standardnotes.standardnotes \
+					me.timschneeberger.GalaxyBudsClient \
+					net.code_industry.MasterPDFEditor \
+					io.github.peazip.PeaZip \
+					com.spotify.Client \
+					org.telegram.desktop \
+					io.github.flattool.Warehouse \
+					com.github.tchx84.Flatseal --noninteractive')
 }
 
 fn nextdns() {
-    system('sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg')
+	system('sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg')
 	system('sh -c "$(curl -sL https://nextdns.io/install)"')
 }
 
-
+fn brave() {
+	system('sh -c "$(curl -sL https://dl.brave.com/install.sh)"')
+}
 
 
 // function set_ohmyzsh {
