@@ -61,43 +61,13 @@ fn main() {
 		}
 
 
-        local_fonts_dir := os.home_dir() + '/.local/share/fonts'
-        if !os.exists(local_fonts_dir) {
-                os.mkdir_all(local_fonts_dir) or { println('Failed to create ~/.local/share/fonts directory') return }
-        }
 
-        hack_fonts := 'https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip'
-        system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
-
-	installhack := os.system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
-	if installhack != 0 {
-		println('Failed to download Hack.zip')
-		return
-	}
-
-        os.chdir(local_fonts_dir) or {
-         println('Failed to change directory to ~/.fonts')
-         return
-	}
-
-        system('unzip Hack.zip')
-
-        jetbrains_fonts := 'https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip'
-        system('wget -c ${jetbrains_fonts} -P ${local_fonts_dir}')
-
-        os.chdir(local_fonts_dir)  or {
-         println('Failed to change directory to ~/.local/share/fonts')
-         return
-	}
-
-        system('unzip JetBrainsMono-2.242.zip')
-
-        system('fc-cache -f -v')
 
  	nextdns()
         flathub()
         flatpak_packages()
 	brave()
+	install_fonts()
 }
 
 
@@ -152,6 +122,35 @@ fn brave() {
 	system('sh -c "$(curl -sL https://dl.brave.com/install.sh)"')
 }
 
+
+fn install_fonts() {
+        local_fonts_dir := os.home_dir() + '/.local/share/fonts'
+        if !os.exists(local_fonts_dir) {
+                os.mkdir_all(local_fonts_dir) or { println('Failed to create ~/.local/share/fonts directory') return }
+        }
+
+	os.chdir(local_fonts_dir) or {
+        println('Failed to change directory to ~/.local/share/fonts')
+        return
+	}
+
+        hack_fonts := 'https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip'
+	jetbrains_fonts := 'https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip'
+
+        system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
+	system('wget -c ${jetbrains_fonts} -P ${local_fonts_dir}')
+
+	// installhack := os.system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
+	// if installhack != 0 {
+	// 	println('Failed to download Hack.zip')
+	// 	return
+	// }
+
+        system('unzip Hack.zip')
+        system('unzip JetBrainsMono-2.242.zip')
+        system('fc-cache -f -v')
+
+}
 
 // function set_ohmyzsh {
 //       clear
