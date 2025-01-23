@@ -109,7 +109,20 @@ fn updated(package_manager string) {
 }
 
 fn install_basics(package_manager string) {
-        system('sudo ${package_manager} install curl flatpak yakuake openssh-server xterm zenity solaar git vim htop most zsh bat git-extras -y')
+        system('sudo ${package_manager} install curl \
+	flatpak \
+	yakuake \
+	openssh-server \
+	xterm \
+	zenity \
+	solaar \
+	git \
+	vim \
+	htop \
+	most \
+	zsh \
+	bat \
+	git-extras -y')
         system('sudo dconf update')
 }
 
