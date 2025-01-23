@@ -67,7 +67,7 @@ fn main() {
         }
 
         hack_fonts := 'https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip'
-        system('wget -c ${hack_fonts} -P ${local_fonts_dir}')  // or { println('Failed to download Hack.zip') return }
+        system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
 
 	installhack := os.system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
 	if installhack != 0 {
