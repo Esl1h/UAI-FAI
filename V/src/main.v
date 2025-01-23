@@ -4,8 +4,6 @@ import os { read_file, system }
 
 fn main() {
 
-		repos_set()
-
         os_release := read_file('/etc/os-release')  or {
          println('Failed to read /etc/os-release')
          return
@@ -51,6 +49,7 @@ fn main() {
 			system('sudo apt install softmaker-office-nx -y')
 		}
 
+	repos_set()
         flathub()
         flatpak_packages()
 
@@ -119,7 +118,7 @@ fn flathub() {
 
 fn flatpak_packages() {
         system('flatpak update')
-        system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.codeindustry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
+        system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.code_industry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
 }
 
 fn repos_set() {
