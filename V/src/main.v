@@ -2,6 +2,15 @@ module main
 
 import os { read_file, system }
 
+fn run_command(command string) {
+
+	result := os.execute(command)
+	if result.exit_code != 0 {
+        	println('Error running command: $command')
+        	println('Output: ${result.output}')
+	}
+}
+
 fn main() {
 
         os_release := read_file('/etc/os-release')  or {
@@ -42,6 +51,8 @@ fn main() {
 			system('sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo')
 			updated(package_manager)
 			system('sudo -E dnf install softmaker-office-nx -y')
+
+
 		} else {
 			system('wget -qO - https://shop.softmaker.com/repo/linux-repo-public.key | sudo apt-key add -')
 			system('sudo echo "deb https://shop.softmaker.com/repo/apt stable non-free" | sudo tee /etc/apt/sources.list.d/softmaker.list')
@@ -49,53 +60,72 @@ fn main() {
 			system('sudo apt install softmaker-office-nx -y')
 		}
 
-	repos_set()
-        flathub()
-        flatpak_packages()
-
-        fonts_dir := os.home_dir() + '/.fonts'
-        if !os.exists(fonts_dir) {
-                os.mkdir_all(fonts_dir)! // or {
-                // println('Failed to create ~/.fonts directory')
-                // return
-        }
-
-        hack_fonts := 'https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip'
-        system('wget -c ${hack_fonts} -P ${fonts_dir}') // or {
-        // println('Failed to download Hack.zip')
-        // return
-
-        os.chdir(fonts_dir)! // or {
-        // println('Failed to change directory to ~/.fonts')
-        // return
-
-        system('unzip Hack.zip') // or {
-        // println('Failed to unzip Hack.zip')
-        // return
 
         local_fonts_dir := os.home_dir() + '/.local/share/fonts'
         if !os.exists(local_fonts_dir) {
-                os.mkdir_all(local_fonts_dir)! // or {
-                // println('Failed to create ~/.local/share/fonts directory')
-                // return
+                os.mkdir_all(local_fonts_dir) or { println('Failed to create ~/.local/share/fonts directory') return }
         }
 
-        jetbrains_fonts := 'https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip'
-        system('wget -c ${jetbrains_fonts} -P ${local_fonts_dir}') // or {
-        // println('Failed to download JetBrainsMono-2.242.zip')
-        // return
+        hack_fonts := 'https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip'
+        system('wget -c ${hack_fonts} -P ${local_fonts_dir}')  // or { println('Failed to download Hack.zip') return }
 
-        os.chdir(local_fonts_dir)! // or {
-        // println('Failed to change directory to ~/.local/share/fonts')
+	installhack := os.system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
+	if installhack != 0 {
+	println('Failed to download Hack.zip')
+	return
+	}
+
+        os.chdir(local_fonts_dir) or {
+         println('Failed to change directory to ~/.fonts')
+         return
+	}
+
+        system('unzip Hack.zip')  //or {
+        // println('Failed to unzip Hack.zip')
         // return
+	//}
+
+        jetbrains_fonts := 'https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip'
+        system('wget -c ${jetbrains_fonts} -P ${local_fonts_dir}')  //or {
+       //  println('Failed to download JetBrainsMono-2.242.zip')
+       //  return
+	// }
+
+        os.chdir(local_fonts_dir)  or {
+         println('Failed to change directory to ~/.local/share/fonts')
+         return
+	}
 
         system('unzip JetBrainsMono-2.242.zip') // or {
-        // println('Failed to unzip JetBrainsMono-2.242.zip')
-        // return
+       //  println('Failed to unzip JetBrainsMono-2.242.zip')
+       //  return
+	// }
 
-        system('fc-cache -f -v') // or {
-        // println('Failed to refresh font cache')
+        system('fc-cache -f -v')  // or {
+       //  println('Failed to refresh font cache')
+       //  return
+	// }
 
+ 	nextdns()
+        flathub()
+        flatpak_packages()
+
+    if os.getenv('ID') == 'fedora' {
+        run_command('sudo ${package_manager} install dnf-plugins-core -y')
+
+        if os.getenv('VERSION_ID').int() <= 40 {
+            // Fedora <= 40
+            run_command('sudo ${package_manager} config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo')
+        } else {
+            // Fedora >= 41
+            run_command('sudo ${package_manager} config-manager addrepo addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo')
+        }
+        run_command('sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc')
+	run_command('sudo ${package_manager} install brave-browser -y')
+    } else {
+        run_command('sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg')
+        run_command('echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list')
+    }
 
 }
 
@@ -121,10 +151,11 @@ fn flatpak_packages() {
         system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.code_industry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
 }
 
-fn repos_set() {
+fn nextdns() {
     system('sudo wget -qO /usr/share/keyrings/nextdns.gpg https://repo.nextdns.io/nextdns.gpg')
 	system('sh -c "$(curl -sL https://nextdns.io/install)"')
 }
+
 
 
 
