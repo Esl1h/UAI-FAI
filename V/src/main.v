@@ -190,8 +190,8 @@ fn sysctl_set() {
 
 fn ssh_set() {
     run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'")
-    run_command("sudo systemctl enable ssh")
-    run_command("sudo systemctl start ssh")
+    run_command("sudo systemctl enable sshd")
+    run_command("sudo systemctl start sshd")
 }
 
 fn dont_need_this() {
