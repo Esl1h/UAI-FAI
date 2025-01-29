@@ -64,10 +64,15 @@ fn main() {
 
 
  	nextdns()
-        flathub()
-        flatpak_packages()
+    flathub()
+    flatpak_packages()
 	brave()
 	install_fonts()
+	set_ohmyzsh()
+    sysctl_set()
+    ssh_set()
+    dont_need_this()
+	set_vim()
 }
 
 
@@ -134,17 +139,11 @@ fn install_fonts() {
         return
 	}
 
-        hack_fonts := 'https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip'
+    hack_fonts := 'https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/Hack.zip'
 	jetbrains_fonts := 'https://download.jetbrains.com/fonts/JetBrainsMono-2.242.zip'
 
-        system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
+    system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
 	system('wget -c ${jetbrains_fonts} -P ${local_fonts_dir}')
-
-	// installhack := os.system('wget -c ${hack_fonts} -P ${local_fonts_dir}')
-	// if installhack != 0 {
-	// 	println('Failed to download Hack.zip')
-	// 	return
-	// }
 
         system('unzip Hack.zip')
         system('unzip JetBrainsMono-2.242.zip')
@@ -152,46 +151,51 @@ fn install_fonts() {
 
 }
 
-// function set_ohmyzsh {
-//       clear
-//       read -n 1 -s -r -p "Now, will be install oh-my-zsh - When finished, press CTRL+D to continue , ok? Press any key to continue"
 
-//       # Install oh-my-zsh
-//       sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - && exit)"
+fn set_ohmyzsh() {
+    os.system("clear")
+    println("Now, will be installed oh-my-zsh - When finished, press CTRL+D to continue, ok? Press any key to continue...")
+    os.input()
 
-//       # install some plugins to zsh - syntax high lighting and command auto suggestions
-//       mkdir -p ~/.oh-my-zsh/completions
-//       git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-//       git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-//       # powerlevel10k zsh theme
-//       git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k
-//       rm ~/.zshrc
-//       wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc
-//       echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
-//       echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
-// }
+    // Install oh-my-zsh
+    run_command("sh -c \"$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - && exit)\"")
 
-// function sysctl_set {
-//     sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'
-//     sudo sysctl -p
-// }
+    // Install some plugins to zsh - syntax highlighting and command auto-suggestions
+    run_command("mkdir -p ~/.oh-my-zsh/completions")
+    run_command("git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting")
+    run_command("git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions")
 
-// function ssh_set {
-//   sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'
-//   sudo systemctl enable ssh
-//   sudo systemctl start ssh
-// }
+    // Powerlevel10k zsh theme
+    run_command("git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k")
+    run_command("rm ~/.zshrc")
+    run_command("wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc")
 
-// function dont_need_this {
-//     sudo su - root -c 'cat <<EOF >>/etc/fstab
-// tmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0
-// tmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0
-// tmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0
-// EOF
-// '
-// }
+    os.write_file("~/.zshrc", "\nexport ZSH=\"$HOME/.oh-my-zsh\"\nsource \$ZSH/oh-my-zsh.sh\n", true) or {
+        eprintln("Failed to update ~/.zshrc")
+    }
+}
 
-// set_ohmyzsh
-// sysctl_set
-// ssh_set
-// dont_need_this
+fn sysctl_set() {
+    run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'")
+    run_command("sudo sysctl -p")
+}
+
+fn ssh_set() {
+    run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'")
+    run_command("sudo systemctl enable ssh")
+    run_command("sudo systemctl start ssh")
+}
+
+fn dont_need_this() {
+    os.write_file("/etc/fstab", "\ntmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0\n", true) or {
+        eprintln("Failed to update /etc/fstab")
+    }
+}
+
+fn set_vim() {
+    run_command("mkdir -p ~/.vim/autoload")
+    run_command("curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim")
+    run_command("curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc")
+    println("Open vim to install and update plugins, ok? Press Enter to continue...")
+    os.input()
+}
