@@ -175,7 +175,7 @@ fn set_ohmyzsh() {
     // Powerlevel10k zsh theme
     run_command("git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k")
     run_command("rm ~/.zshrc")
-    run_command("wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc")
+    run_command("wget -c https://raw.githubusercontent.com/Esl1h/dotfiles/main/.zshrc -O ~/.zshrc")
 
     os.write_file("~/.zshrc", "\nexport ZSH=\"${home}/.oh-my-zsh\"\nsource \$ZSH/oh-my-zsh.sh\n") or {
         eprintln("Failed to update ~/.zshrc")
@@ -184,12 +184,12 @@ fn set_ohmyzsh() {
 
 
 fn sysctl_set() {
-    run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'")
+    run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/sysctl.conf >>/etc/sysctl.conf'")
     run_command("sudo sysctl -p")
 }
 
 fn ssh_set() {
-    run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/ssh_config >/etc/ssh/ssh_config'")
+    run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/ssh/ssh_config >/etc/ssh/ssh_config'")
     run_command("sudo systemctl enable sshd")
     run_command("sudo systemctl start sshd")
 }
