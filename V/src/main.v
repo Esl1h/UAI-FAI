@@ -2,16 +2,9 @@ module main
 
 import os { read_file, system }
 
-fn run_command(command string) {
-
-	result := os.execute(command)
-	if result.exit_code != 0 {
-        	println('Error running command: $command')
-        	println('Output: ${result.output}')
-	}
-}
 
 fn main() {
+
 
         os_release := read_file('/etc/os-release')  or {
          println('Failed to read /etc/os-release')
@@ -61,8 +54,6 @@ fn main() {
 		}
 
 
-
-
  	nextdns()
     flathub()
     flatpak_packages()
@@ -73,6 +64,15 @@ fn main() {
     ssh_set()
     dont_need_this()
 	set_vim()
+}
+
+fn run_command(command string) {
+
+	result := os.execute(command)
+	if result.exit_code != 0 {
+        	println('Error running command: $command')
+        	println('Output: ${result.output}')
+	}
 }
 
 
@@ -153,9 +153,16 @@ fn install_fonts() {
 
 
 fn set_ohmyzsh() {
+	home := os.getenv("HOME")
+
+	if home == "" {
+    	eprintln("Failed to get HOME environment variable")
+   		return
+	}
+
     os.system("clear")
     println("Now, will be installed oh-my-zsh - When finished, press CTRL+D to continue, ok? Press any key to continue...")
-    os.input()
+    //os.input()
 
     // Install oh-my-zsh
     run_command("sh -c \"$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O - && exit)\"")
@@ -170,10 +177,11 @@ fn set_ohmyzsh() {
     run_command("rm ~/.zshrc")
     run_command("wget -c https://raw.githubusercontent.com/Esl1h/UAI/main/conf/zshrc -O ~/.zshrc")
 
-    os.write_file("~/.zshrc", "\nexport ZSH=\"$HOME/.oh-my-zsh\"\nsource \$ZSH/oh-my-zsh.sh\n", true) or {
+    os.write_file("~/.zshrc", "\nexport ZSH=\"${home}/.oh-my-zsh\"\nsource \$ZSH/oh-my-zsh.sh\n") or {
         eprintln("Failed to update ~/.zshrc")
-    }
+	}
 }
+
 
 fn sysctl_set() {
     run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/UAI/main/conf/sysctl.conf >>/etc/sysctl.conf'")
@@ -187,9 +195,9 @@ fn ssh_set() {
 }
 
 fn dont_need_this() {
-    os.write_file("/etc/fstab", "\ntmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0\n", true) or {
+    os.write_file("/etc/fstab", "\ntmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0\n") or {
         eprintln("Failed to update /etc/fstab")
-    }
+	}
 }
 
 fn set_vim() {
@@ -197,5 +205,5 @@ fn set_vim() {
     run_command("curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim")
     run_command("curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc")
     println("Open vim to install and update plugins, ok? Press Enter to continue...")
-    os.input()
+    //os.input()
 }
