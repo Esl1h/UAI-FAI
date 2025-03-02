@@ -85,7 +85,7 @@ fn flathub() {
 
 fn flatpak_packages() {
 	system('flatpak update')
-	system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.code_industry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
+	system('flatpak install --disable-documentation --no-deps --system -y flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.code_industry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
 }
 
 fn nextdns() {
@@ -147,8 +147,19 @@ fn set_ohmyzsh() {
 	run_command('rm ~/.zshrc')
 	run_command('wget -c https://raw.githubusercontent.com/Esl1h/dotfiles/main/.zshrc -O ~/.zshrc')
 
-	os.write_file('~/.zshrc', "\nexport ZSH=\"${home}/.oh-my-zsh\"\nsource \$ZSH/oh-my-zsh.sh\n") or {
+	// Lê o conteúdo atual do arquivo
+	current_content := os.read_file('${home}/.zshrc') or {
+		eprintln('Failed to read ~/.zshrc')
+		return
+	}
+
+	// Adiciona as novas linhas ao conteúdo existente
+	new_content := current_content + "\nexport ZSH=\"${home}/.oh-my-zsh\"\nsource \$ZSH/oh-my-zsh.sh\n"
+
+	// Escreve todo o conteúdo de volta ao arquivo
+	os.write_file('${home}/.zshrc', new_content) or {
 		eprintln('Failed to update ~/.zshrc')
+		return
 	}
 }
 
@@ -164,9 +175,9 @@ fn ssh_set() {
 }
 
 fn dont_need_this() {
-	os.write_file('/etc/fstab', '\ntmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0\n') or {
-		eprintln('Failed to update /etc/fstab')
-	}
+	fstab_content := '\ntmpfs /tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/tmp tmpfs defaults,noatime,mode=1777 0 0\ntmpfs /var/log tmpfs defaults,noatime,mode=0755 0 0\n'
+
+	run_command("sudo su - root -c 'echo \"${fstab_content}\" >> /etc/fstab'")
 }
 
 fn set_vim() {

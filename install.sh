@@ -76,7 +76,7 @@ function add_flathub {
 
 function flatpak_packages {
     run_command "flatpak update -y" || error_exit "Failed to update flatpak"
-    run_command "flatpak install flathub \
+    run_command "flatpak install --disable-documentation --no-deps --system -y flathub \
         com.protonvpn.www \
         org.standardnotes.standardnotes \
         me.timschneeberger.GalaxyBudsClient \
