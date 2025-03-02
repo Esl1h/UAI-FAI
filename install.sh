@@ -76,7 +76,7 @@ function add_flathub {
 
 function flatpak_packages {
     run_command "flatpak update -y" || error_exit "Failed to update flatpak"
-    run_command "flatpak install flathub \
+    run_command "flatpak install --disable-documentation --no-deps --system -y flathub \
         com.protonvpn.www \
         org.standardnotes.standardnotes \
         me.timschneeberger.GalaxyBudsClient \
@@ -121,9 +121,7 @@ function repos_set {
             run_command "sudo $package_manager config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
             else
                 # Fedora >= 41
-                run_command "sudo wget -qO brave-browser.repo https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
-                sed -i '/autorefresh/s/^/#/' brave-browser.repo
-                run_command "sudo $package_manager config-manager addrepo --from-repofile=brave-browser.repo"
+                run_command "sudo $package_manager config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo"
             fi
         run_command "sudo rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc"
 
