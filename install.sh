@@ -161,10 +161,12 @@ function set_ohmyzsh {
       # install some plugins to zsh - syntax high lighting and command auto suggestions
       run_command "mkdir -p ~/.oh-my-zsh/completions"
       run_command "git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+        sleep 2 # error 429 github - too many requests
       run_command "git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
       # powerlevel10k zsh theme
       run_command "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k"
       run_command "rm ~/.zshrc"
+        sleep 2 # error 429 github - too many requests
       run_command "wget -c https://raw.githubusercontent.com/Esl1h/dotfiles/main/.zshrc -O ~/.zshrc"
       echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
       echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
@@ -173,6 +175,8 @@ function set_ohmyzsh {
 function sysctl_set {
     run_command "sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/sysctl.conf >>/etc/sysctl.conf' "
     run_command "sudo sysctl -p"
+    sleep 2 # error 429 github - too many requests
+
 }
 
 function ssh_set {
@@ -194,6 +198,7 @@ function set_vim {
   run_command "mkdir -p ~/.vim/autoload"
   # install VIm-Plug
   run_command "curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  sleep 2 # error 429 github - too many requests
   # vimrc from my dotfiles repo
   run_command "curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc"
   #
