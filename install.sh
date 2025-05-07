@@ -76,6 +76,7 @@ function add_flathub {
 
 function flatpak_packages {
     run_command "flatpak update --appstream -y && flatpak remote-ls flathub > /dev/null" || error_exit "Failed to update flatpak"
+    sleep 2 # cache error? Too fast?
     run_command "flatpak install flathub \
         com.protonvpn.www \
         org.standardnotes.standardnotes \
