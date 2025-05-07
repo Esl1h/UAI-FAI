@@ -114,7 +114,9 @@ function repos_set {
  # Softmaker Office and Brave Browser
     if [ "${ID}" = "fedora" ]; then
         run_command "sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo"
-        run_command "sudo $package_manager install dnf-plugins-core -y"
+            if ! rpm -q dnf-plugins-core > /dev/null 2>&1; then
+                run_command "sudo $package_manager install dnf-plugins-core -y"
+            fi
 
         if [ $VERSION_ID -le 40 ]; then
             # Fedora =< 40
