@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # https://esli.blog.br/uai-fai
 # Config files on my https://github.com/Esl1h/dotfiles
+set -e
 
 . /etc/os-release
 
@@ -32,7 +33,7 @@ function set_package_manager {
     package_manager="dnf"
 
   elif [ "${ID}" = "ubuntu" ]  || [ "${ID}" = "debian" ] ; then
-    package_manager="apt"
+    package_manager="apt-get"
 
   else
       echo "(Maybe) your distro is not supported"
@@ -75,8 +76,9 @@ function add_flathub {
 
 
 function flatpak_packages {
-    run_command "flatpak update -y" || error_exit "Failed to update flatpak"
-    run_command "flatpak install --disable-documentation --no-deps --system -y flathub \
+    run_command "flatpak update --appstream -y && flatpak remote-ls flathub > /dev/null" || error_exit "Failed to update flatpak"
+    sleep 2 # cache error? Too fast?
+    run_command "flatpak install flathub \
         com.protonvpn.www \
         org.standardnotes.standardnotes \
         me.timschneeberger.GalaxyBudsClient \
@@ -114,7 +116,9 @@ function repos_set {
  # Softmaker Office and Brave Browser
     if [ "${ID}" = "fedora" ]; then
         run_command "sudo wget -qO /etc/yum.repos.d/softmaker.repo https://shop.softmaker.com/repo/softmaker.repo"
-        run_command "sudo $package_manager install dnf-plugins-core -y"
+            if ! rpm -q dnf-plugins-core > /dev/null 2>&1; then
+                run_command "sudo $package_manager install dnf-plugins-core -y"
+            fi
 
         if [ $VERSION_ID -le 40 ]; then
             # Fedora =< 40
@@ -156,11 +160,14 @@ function install_zsh {
 function set_ohmyzsh {
       # install some plugins to zsh - syntax high lighting and command auto suggestions
       run_command "mkdir -p ~/.oh-my-zsh/completions"
-      run_command "git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
-      run_command "git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+      run_command "git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+        sleep 2 # error 429 github - too many requests
+      run_command "git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+        sleep 2 # error 429 github - too many requests
       # powerlevel10k zsh theme
       run_command "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k"
       run_command "rm ~/.zshrc"
+        sleep 2 # error 429 github - too many requests
       run_command "wget -c https://raw.githubusercontent.com/Esl1h/dotfiles/main/.zshrc -O ~/.zshrc"
       echo export ZSH=\""$HOME"/.oh-my-zsh\" >>~/.zshrc
       echo "source \$ZSH/oh-my-zsh.sh" >>~/.zshrc
@@ -169,6 +176,8 @@ function set_ohmyzsh {
 function sysctl_set {
     run_command "sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/sysctl.conf >>/etc/sysctl.conf' "
     run_command "sudo sysctl -p"
+    sleep 2 # error 429 github - too many requests
+
 }
 
 function ssh_set {
@@ -190,6 +199,7 @@ function set_vim {
   run_command "mkdir -p ~/.vim/autoload"
   # install VIm-Plug
   run_command "curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  sleep 2 # error 429 github - too many requests
   # vimrc from my dotfiles repo
   run_command "curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc"
   #
