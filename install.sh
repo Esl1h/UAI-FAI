@@ -43,9 +43,8 @@ function set_package_manager {
 }
 
 function update_system {
-    run_command "sudo $package_manager update -y" || error_exit "Failed to update system"
-    run_command "sudo $package_manager upgrade -y" || error_exit "Failed to upgrade system"
-    run_command "sudo $package_manager autoremove -y" || error_exit "Failed to autoremove packages"
+    run_command "sudo $package_manager update -qq -y && sudo $package_manager upgrade -qq -y" || error_exit "Failed to upgrade system"
+    run_command "sudo $package_manager autoremove -qq -y" || error_exit "Failed to autoremove packages"
 }
 
 
