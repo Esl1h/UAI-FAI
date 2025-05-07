@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # https://esli.blog.br/uai-fai
 # Config files on my https://github.com/Esl1h/dotfiles
+set -e
 
 . /etc/os-release
 
@@ -32,7 +33,7 @@ function set_package_manager {
     package_manager="dnf"
 
   elif [ "${ID}" = "ubuntu" ]  || [ "${ID}" = "debian" ] ; then
-    package_manager="apt"
+    package_manager="apt-get"
 
   else
       echo "(Maybe) your distro is not supported"
@@ -161,9 +162,10 @@ function install_zsh {
 function set_ohmyzsh {
       # install some plugins to zsh - syntax high lighting and command auto suggestions
       run_command "mkdir -p ~/.oh-my-zsh/completions"
-      run_command "git clone https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+      run_command "git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git  ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
         sleep 2 # error 429 github - too many requests
-      run_command "git clone https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+      run_command "git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions          ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+        sleep 2 # error 429 github - too many requests
       # powerlevel10k zsh theme
       run_command "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k"
       run_command "rm ~/.zshrc"
