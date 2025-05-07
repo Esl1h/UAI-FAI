@@ -21,7 +21,7 @@ fn main() {
 			'dnf'
 		}
 		'ubuntu', 'debian' {
-			'apt'
+			'apt-get'
 		}
 		else {
 			println('(Maybe) your distro is not supported')
@@ -69,9 +69,8 @@ fn run_command(command string) {
 }
 
 fn updated(package_manager string) {
-	system('sudo ${package_manager} update -y')
-	system('sudo ${package_manager} upgrade -y')
-	system('sudo ${package_manager} autoremove -y')
+	system('sudo ${package_manager} update -qq -y && sudo ${package_manager} upgrade -qq -y')
+	system('sudo ${package_manager} autoremove -qq -y')
 }
 
 fn install_basics(package_manager string) {
@@ -84,8 +83,8 @@ fn flathub() {
 }
 
 fn flatpak_packages() {
-	system('flatpak update')
-	system('flatpak install --disable-documentation --no-deps --system -y flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.code_industry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
+	system('flatpak update --appstream -y && flatpak remote-ls flathub > /dev/null')
+	system('flatpak install flathub com.protonvpn.www org.standardnotes.standardnotes me.timschneeberger.GalaxyBudsClient net.code_industry.MasterPDFEditor io.github.peazip.PeaZip com.spotify.Client org.telegram.desktop io.github.flattool.Warehouse com.github.tchx84.Flatseal --noninteractive')
 }
 
 fn nextdns() {
@@ -139,11 +138,11 @@ fn set_ohmyzsh() {
 
 	// Install some plugins to zsh - syntax highlighting and command auto-suggestions
 	run_command('mkdir -p ~/.oh-my-zsh/completions')
-	run_command('git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting')
-	run_command('git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions')
+	run_command('git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting && sleep 2')
+	run_command('git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions && sleep 2')
 
 	// Powerlevel10k zsh theme
-	run_command('git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k')
+	run_command('git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k && sleep 2')
 	run_command('rm ~/.zshrc')
 	run_command('wget -c https://raw.githubusercontent.com/Esl1h/dotfiles/main/.zshrc -O ~/.zshrc')
 
@@ -169,7 +168,7 @@ fn sysctl_set() {
 }
 
 fn ssh_set() {
-	run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/ssh/ssh_config >/etc/ssh/ssh_config'")
+	run_command("sudo su - root -c 'curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/etc/ssh/ssh_config >/etc/ssh/ssh_config' && sleep 2")
 	run_command('sudo systemctl enable sshd')
 	run_command('sudo systemctl start sshd')
 }
@@ -182,8 +181,8 @@ fn dont_need_this() {
 
 fn set_vim() {
 	run_command('mkdir -p ~/.vim/autoload')
-	run_command('curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
-	run_command('curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc')
+	run_command('curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim && sleep 2')
+	run_command('curl https://raw.githubusercontent.com/Esl1h/dotfiles/main/.vimrc > ~/.vimrc && sleep 2')
 	println('Open vim to install and update plugins, ok? Press Enter to continue...')
 	// os.input()
 }
